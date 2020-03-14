@@ -1,0 +1,37 @@
+commit a183badaa4c87a4849108d11a327127211a47371
+Author: Mike Bayer <mike_mp@zzzcomputing.com>
+Date:   Tue Mar 3 13:32:19 2020 -0500
+
+    Ignore SQLAlchemy RemovedIn20Warning
+    
+    SQLAlchemy 1.4 will be introducing a new warning
+    class called RemovedIn20Warning, which will indicate behaviors
+    and APIs that are planned on being changed for the
+    SQLAlchemy 2.0 release [1].  As SQLAlchemy 2.0 is planned on
+    being a more major API break, applications will normally need
+    to wait until they are fully on SQLAlchemy 1.4 only as well as
+    Python 3 only in order to begin using new APIs that will allow
+    migration to 2.0.
+    
+    For now, Keystone and others don't have a need to be raising
+    for this warning as there are not yet clear upgrade paths
+    established.
+    
+    [1] https://docs.sqlalchemy.org/en/14/changelog/migration_20.html#sqlalchemy-1-x-to-2-0-transition
+    
+    Change-Id: Icb005b2e7b9d851f5a3e8677599b32a6e3edddc2
+
+diff --git a/keystone/tests/unit/core.py b/keystone/tests/unit/core.py
+index 4a1d5ab7d..ffdf52577 100644
+--- a/keystone/tests/unit/core.py
++++ b/keystone/tests/unit/core.py
+@@ -684,6 +684,9 @@ class BaseTestCase(testtools.TestCase):
+         warnings.filterwarnings('error', category=DeprecationWarning,
+                                 module='^keystone\\.')
+         warnings.simplefilter('error', exc.SAWarning)
++        if hasattr(exc, "RemovedIn20Warning"):
++            warnings.simplefilter('ignore', exc.RemovedIn20Warning)
++
+         self.addCleanup(warnings.resetwarnings)
+         # Ensure we have an empty threadlocal context at the start of each
+         # test.

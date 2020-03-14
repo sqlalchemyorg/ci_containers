@@ -1,0 +1,43 @@
+- name: other deps for tests
+  dnf: name="{{ items }}" state="installed"
+  vars:
+    items:
+      - redis
+      - memcached
+      - libmemcached-devel
+      - patch
+      - pcre-devel
+
+- name: create scripts directory
+  file:
+    path: /usr/local/jenkins/scripts
+    state: directory
+
+- name: copy environment files
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/jenkins/scripts
+    owner: jenkins
+    mode: "u=rwx,g=rx"
+  with_items:
+    - categorize_gerrit_changes.sh
+    - openstack.sh
+    - sql_env.sh
+    - sql_env_lite.sh
+    - dbapi_master_gits.txt
+
+- name: copy environment template files
+  template:
+    src: "{{ item }}.j2"
+    dest: "/usr/local/jenkins/scripts/{{ item }}"
+    owner: jenkins
+    mode: "u=rwx,g=rx"
+  with_items:
+    - python_env.sh
+
+- name: synchronize openstack patches
+  synchronize:
+    src: openstack_patches/
+    dest: /usr/local/jenkins/scripts/openstack_patches/
+    delete: yes
+    recursive: yes

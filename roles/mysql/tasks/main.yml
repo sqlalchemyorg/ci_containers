@@ -1,0 +1,74 @@
+- name: create docker build location
+  file:
+    path: "/usr/local/dockerbuilds/{{ item }}/"
+    state: directory
+  with_items: ["mysql", "mariadb"]
+
+- name: copy Dockerfile etc to docker build location
+  copy:
+    src: "Dockerfile.{{ item }}"
+    dest: "/usr/local/dockerbuilds/{{ item }}/Dockerfile"
+  with_items: ["mysql", "mariadb"]
+
+- name: stop removed containers
+  docker_container:
+    name: "{{ item['type'] }}_{{ item['version'] }}"
+    state: absent
+  with_items: "{{ mysql_remove_versions }}"
+
+- name: remove external network for removed
+  include_tasks: "{{ playbook_dir }}/roles/networking/tasks/remove_ip.yml"
+  vars:
+    net_name: "{{ item['hostname'] }}"
+  when: add_public_network|bool
+  with_items: "{{ mysql_remove_versions }}"
+
+- name: copy scripts to build location
+  copy:
+    src: "{{ item[1] }}"
+    dest: "/usr/local/dockerbuilds/{{ item[0] }}/"
+  with_nested:
+    - ["mysql", "mariadb"]
+    - ["mysql_entrypoint.sh", "mysql_setup.sh"]
+
+- name: build images
+  docker_image:
+    name: "{{ item['type'] }}_{{ item['version'] }}"
+    path: "/usr/local/dockerbuilds/{{ item['type'] }}"
+    force: "{{ force_container_rebuild|bool }}"
+    pull: yes
+    buildargs:
+      product_version: "{{ item['version'] }}"
+  with_items: "{{ mysql_versions }}"
+
+- name: setup external network
+  include_tasks: "{{ playbook_dir }}/roles/networking/tasks/add_ip.yml"
+  vars:
+    ip_number: "{{ item['public_ip'] }}"
+    net_name: "{{ item['hostname'] }}"
+  when: add_public_network|bool
+  with_items: "{{ mysql_versions }}"
+
+- name: create mysql containers
+  docker_container:
+    image: "{{ item['type'] }}_{{ item['version'] }}"
+    name: "{{ item['type'] }}_{{ item['version'] }}"
+    restart_policy: always
+    recreate: "{{ force_container_rebuild|bool }}"
+    env: TZ="America/New_York"
+    published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"
+    networks:
+      - name: dbcontainers
+        ipv4_address: "{{ item['internal_ip'] }}"
+  vars:
+    published_ports:
+      - "{{ item['public_ip'] }}:3306:3306/tcp"
+  with_items: "{{ mysql_versions }}"
+
+- name: add /etc/hosts entries
+  lineinfile:
+    path: /etc/hosts
+    regexp: ".*{{ item['hostname'] }}"
+    line: "{{ item['internal_ip'] }}    {{ item['hostname'] }}"
+  with_items: "{{ mysql_versions }}"
+

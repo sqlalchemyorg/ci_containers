@@ -1,0 +1,15 @@
+
+[target]
+dell jenkins_secret="{{ dell_secret }}" jenkins_slave_name="dell" add_public_network=true
+d2 jenkins_secret="{{ d2_secret }}" jenkins_slave_name="d2"
+d3 jenkins_secret="{{ d3_secret }}" jenkins_slave_name="d3"
+
+[fast]
+dell
+d3
+
+
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+add_public_network=false

@@ -1,0 +1,6 @@
+tmp_rpms/*
+site.retry
+.*a*.pa*
+.*se*.*l
+
+

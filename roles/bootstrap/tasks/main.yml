@@ -1,0 +1,42 @@
+
+# - name: Check for single host
+#  fail: msg="Single host check failed.  Specify --limit=<host>"
+#  when: "{{ play_hosts|length }} != 1"
+#  tags:
+#    - always
+
+- name: Run deferred setup to gather facts
+  tags:
+    - always
+  setup:
+
+- name: set selinux fact from setup "{{ ansible_selinux.status }}"
+  tags:
+    - always
+  set_fact:
+    use_selinux: "{{ ansible_selinux.status|lower != 'disabled' }}"
+
+- name: get real hostname
+  tags:
+    - always
+  command: "hostname"
+  register: command_output
+
+#- name: get tz
+#  tags:
+#   - always
+
+- set_fact:
+    inventory_to: "{{ command_output.stdout }}"
+    full_hostname: "{{ command_output.stdout }}"
+  tags:
+    - always
+
+# This allows this to work:
+# sudo -H -S  -u gmvault bash
+# using the %wheel group for some reason doesn't allow that.
+- name: add special nopasswd line for our user
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    line: '{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL'

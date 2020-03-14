@@ -1,0 +1,72 @@
+ansible_user: classic
+
+# note https://bugs.python.org/issue33374 for building Python 2.7.11-2.7.14 on fedora 28
+# this also prevents us from building python 2.6
+
+# this renders a PATH, so put the Python version that will be used for
+# utilities etc. first
+cpython_versions:
+  - "3.8.0"
+  - "2.7.17"
+  - "3.5.8"
+  - "3.6.9"
+  - "3.7.5"
+
+force_container_rebuild: false
+
+# NOTE: hostnames are also used as label strings
+# for ifcfg scripts and the total label length must be
+# less than 15 characters, which means hostnames here should be <=10
+# chars
+
+mysql_versions:
+  - {"version": "5.7", "hostname": "mysql57",
+     "public_ip": "192.168.1.201", "internal_ip": "172.18.0.6", "type": "mysql"}
+  - {"version": "5.6", "hostname": "mysql56",
+     "public_ip": "192.168.1.202", "internal_ip": "172.18.0.7", "type": "mysql", "lightweight": true}
+  - {"version": "10.5.1", "hostname": "mariadb105",
+     "public_ip": "192.168.1.213", "internal_ip": "172.18.0.16", "type": "mariadb"}
+  - {"version": "10.4.12", "hostname": "mariadb104",
+     "public_ip": "192.168.1.214", "internal_ip": "172.18.0.15", "type": "mariadb",
+     "lightweight": true, "openstack": true}
+  - {"version": "8.0", "hostname": "mysql80",
+     "public_ip": "192.168.1.210", "internal_ip": "172.18.0.11", "type": "mysql"}
+
+mysql_remove_versions:
+  - {"version": "10.1.24", "hostname": "mariadb101",
+     "public_ip": "192.168.1.204", "internal_ip": "172.18.0.9", "type": "mariadb",
+     "lightweight": true, "openstack": true}
+  - {"version": "10.2.9", "hostname": "mariadb102",
+     "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8", "type": "mariadb",
+     "lightweight": true, "openstack": true}
+  - {"version": "10.3.9", "hostname": "mariadb103",
+     "public_ip": "192.168.1.211", "internal_ip": "172.18.0.12", "type": "mariadb"}
+
+# repotag:
+# go to https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/
+# look for:
+# pgdg-centos96-9.6-3.noarch.rpm
+# the "9.6-3" is the repotag
+postgresql_versions:
+  - {"version": "12", "hostname": "pg12",
+     "public_ip": "192.168.1.212", "internal_ip": "172.18.0.14", "repotag": "12-0"}
+  - {"version": "11", "hostname": "pg11",
+     "public_ip": "192.168.1.207", "internal_ip": "172.18.0.5", "repotag": "11-2"}
+  - {"version": "10", "hostname": "pg10",
+     "public_ip": "192.168.1.209", "internal_ip": "172.18.0.3", "repotag": "10-2"}
+  - {"version": "9.6", "hostname": "pg96",
+     "public_ip": "192.168.1.206", "internal_ip": "172.18.0.4", "repotag": "9.6-3",
+     "lightweight": true, "openstack": true}
+
+postgresql_remove_versions:
+  - {"version": "9.4", 'hostname': "pg94"}
+
+mssql_versions:
+  - {"version": "2017", "hostname": "mssql2017",
+     "public_ip": "192.168.1.208", "internal_ip": "172.18.0.10", }
+
+oracle_versions:
+  - {"version": "11.2.0", "hostname": "oracle1120",
+     "public_ip": "192.168.1.205", "internal_ip": "172.18.0.2", }
+
+jenkins_runner_ip: "172.18.0.13"

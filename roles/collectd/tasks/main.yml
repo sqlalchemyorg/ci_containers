@@ -1,0 +1,36 @@
+- name: install things
+  dnf: name="{{ item }}" state=installed
+  with_items:
+    - collectd
+    - collectd-utils
+    - collectd-ping
+
+- name: configure ping
+  template:
+    src: ping.conf.j2
+    dest: /etc/collectd.d/ping.conf
+
+- name: configure write_graphite
+  template:
+    src: write_graphite.conf.j2
+    dest: /etc/collectd.d/write_graphite.conf
+
+- name: remove nut file that collectd seems to want to install
+  file:
+    path: /etc/collectd.d/nut.conf
+    state: absent
+
+- name: swap
+  lineinfile:
+    path: /etc/collectd.conf
+    line: "LoadPlugin swap"
+    regexp: "^#LoadPlugin swap"
+
+- name: create selinux policy
+  script: create_selinux_module.sh
+
+- name: enable and start collectd
+  systemd:
+    name: collectd
+    enabled: yes
+    state: restarted

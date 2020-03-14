@@ -1,0 +1,38 @@
+FROM centos
+
+ARG product_version=5.7
+ARG yumrepo=mysql80-community-release-el7-1.noarch.rpm
+WORKDIR /opt
+
+RUN \
+	yum install -y iproute dosfstools
+
+RUN \
+	curl -OL https://dev.mysql.com/get/${yumrepo}
+
+RUN \
+	rpm -i ${yumrepo} && \
+	yum-config-manager --disable mysql80-community && \
+	yum-config-manager --disable mysql57-community && \
+	yum-config-manager --disable mysql56-community && \
+	yum-config-manager --enable mysql`echo "${product_version}" | awk -F. '{ print $1$2 }'`-community && \
+	yum install -y mysql-community-server
+
+# https://bugs.mysql.com/bug.php?id=91395
+# https://dev.mysql.com/doc/refman/8.0/en/resource-groups.html#resource-group-restrictions
+# https://unix.stackexchange.com/questions/303423/unset-setcap-additional-capabilities-on-excutable
+
+RUN setcap -r /usr/sbin/mysqld | true
+
+COPY ./mysql_entrypoint.sh /
+
+RUN \
+	chmod 755 /mysql_entrypoint.sh
+
+EXPOSE 3306
+
+
+ENTRYPOINT ["/mysql_entrypoint.sh"]
+
+
+

@@ -1,0 +1,76 @@
+- name: create docker build location
+  file:
+    path: "/usr/local/dockerbuilds/postgresql/"
+    state: directory
+
+- name: copy Dockerfile etc to docker build location
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/local/dockerbuilds/postgresql/"
+  with_items:
+    - "postgresql_setup.sh"
+    - "postgresql_entrypoint.sh"
+    - "Dockerfile"
+
+- name: stop removed containers
+  docker_container:
+    name: "postgresql_{{ item['version'] }}"
+    state: absent
+  with_items: "{{ postgresql_remove_versions }}"
+
+- name: remove external network for removed
+  include_tasks: "{{ playbook_dir }}/roles/networking/tasks/remove_ip.yml"
+  vars:
+    net_name: "{{ item['hostname'] }}"
+  when: add_public_network|bool
+  with_items: "{{ postgresql_remove_versions }}"
+
+- name: "build images"
+  docker_image:
+    name: "postgresql_{{ item['version'] }}"
+    path: "/usr/local/dockerbuilds/postgresql"
+    force: "{{ force_container_rebuild|bool }}"
+    pull: yes
+    buildargs:
+      product_version: "{{ item['version'] }}"
+      repotag: "{{ item['repotag'] }}"
+  with_items: "{{ postgresql_versions }}"
+
+- name: setup external network
+  include_tasks: "{{ playbook_dir }}/roles/networking/tasks/add_ip.yml"
+  vars:
+    ip_number: "{{ item['public_ip'] }}"
+    net_name: "{{ item['hostname'] }}"
+  when: add_public_network|bool
+  with_items: "{{ postgresql_versions }}"
+
+- name: create postgresql containers
+  docker_container:
+    image: "postgresql_{{ item['version'] }}"
+    name: "postgresql_{{ item['version'] }}"
+    restart_policy: always
+    recreate: "{{ force_container_rebuild|bool }}"
+    env: TZ="America/New_York"
+    published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"
+    networks:
+      - name: dbcontainers
+        ipv4_address: "{{ item['internal_ip'] }}"
+  vars:
+    published_ports:
+      - "{{ item['public_ip'] }}:5432:5432/tcp"
+  with_items: "{{ postgresql_versions }}"
+
+- name: add /etc/hosts entries
+  lineinfile:
+    path: /etc/hosts
+    regexp: "{{ item['internal_ip'] }}"
+    line: "{{ item['internal_ip'] }}    {{ item['hostname'] }}"
+  with_items: "{{ postgresql_versions }}"
+
+- name: restart jenkins, if running, to refresh /etc/hosts
+  shell: |
+    jenkins=$( docker ps --format "{{ '{{' }} .Names {{ '}}' }}" | grep "jenkins" )
+    if [[ "${jenkins}" != "" ]]; then
+      docker restart jenkins
+    fi
+  become: yes

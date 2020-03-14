@@ -1,0 +1,37 @@
+FROM centos:8
+
+ARG python_versions="2.7.17 3.8.0"
+
+# for glibc-langpack-en see https://github.com/CentOS/sig-cloud-instance-images/issues/71#issuecomment-538302151
+ARG packages="java openldap-devel patch xz bzip2 procps git zip unzip net-tools glibc-langpack-en"
+
+# centos
+ARG build_deps="epel-release gcc gcc-c++ make cmake bzip2-devel zlib-devel openssl-devel"
+
+# fedora
+# ARG build_deps="gcc gcc-c++ make cmake bzip2-devel zlib-devel compat-openssl10-devel"
+
+ARG python_common_build_deps="libffi-devel"
+ARG python_interp_build_deps="sqlite-devel readline-devel ncurses-devel bzip2-devel gdbm-devel zlib-devel tk-devel libdb-devel xz-devel expat-devel"
+
+
+RUN \
+	mkdir -p /usr/local/src && \
+	mkdir -p /usr/local/jenkins && \
+	/usr/sbin/groupadd jenkins -g 1002 && \
+	/usr/sbin/useradd jenkins -u 1002 -g jenkins && \
+	chown jenkins:jenkins /usr/local/jenkins
+
+WORKDIR /usr/local/src
+
+RUN yum install -y ${packages} ${build_deps} ${python_common_build_deps}
+
+RUN yum install -y ${python_interp_build_deps}
+
+RUN curl -L -O https://bootstrap.pypa.io/get-pip.py
+
+COPY install_cpython.sh /usr/local/src/install_cpython.sh
+
+RUN chmod 0755 /usr/local/src/install_cpython.sh && \
+	/usr/local/src/install_cpython.sh "${python_versions}"
+

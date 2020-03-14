@@ -1,0 +1,65 @@
+- name: install things
+  dnf: name="{{ items }}" state=installed
+  vars:
+    items:
+      - docker
+      - python3-docker
+      - git
+      - python-virtualenv
+      - bridge-utils
+
+- set_fact:
+    docker_home: /home/docker
+
+- name: create docker homedir (owned by root)
+  file:
+    path: "{{ docker_home }}"
+    state: directory
+    setype: container_var_lib_t
+    seuser: system_u
+
+- name: create docker startup customizations directory
+  file:
+    path: /etc/systemd/system/docker.service.d/
+    state: directory
+
+- name: create docker startup customizations
+  copy:
+    src: "startup_dependencies.conf"
+    dest: "/etc/systemd/system/docker.service.d/startup_dependencies.conf"
+
+- name: setup overlay2 filesystem option
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+
+- name: disable docker-storage-setup
+  systemd:
+    name: docker-storage-setup
+    enabled: no
+    masked: yes
+    state: stopped
+
+- name: enable and start docker
+  systemd:
+    name: docker
+    enabled: yes
+    daemon_reload: yes
+    state: started
+
+- name: create docker network bridge
+  docker_network:
+    driver: bridge
+    state: present
+    name: dbcontainers
+    driver_options:
+      com.docker.network.bridge.name: docker_net
+    ipam_options:
+      subnet: '172.18.0.0/16'
+      gateway: '172.18.0.1'
+
+- name: give classic /usr/local/src
+  file:
+    path: /usr/local/src
+    state: directory
+    owner: "{{ ansible_user }}"

@@ -1,0 +1,27 @@
+FROM centos:7
+
+ARG product_version=10.4.12
+
+WORKDIR /opt
+
+RUN \
+    curl -O https://downloads.mariadb.com/MariaDB/mariadb-${product_version}/yum/rhel/mariadb-${product_version}-rhel-7-x86_64-rpms.tar
+
+RUN \
+    tar -xf mariadb-${product_version}-rhel-7-x86_64-rpms.tar && \
+    mariadb-${product_version}-rhel-7-x86_64-rpms/setup_repository && \
+    yum install -y mariadb-server
+
+COPY ./mysql_setup.sh /
+COPY ./mysql_entrypoint.sh /
+
+RUN \
+	chmod 755 /mysql_setup.sh /mysql_entrypoint.sh && \
+	/mysql_setup.sh "mariadb_${product_version}"
+
+EXPOSE 3306
+
+ENTRYPOINT ["/mysql_entrypoint.sh"]
+
+
+

@@ -1,0 +1,10 @@
+- set_fact:
+    net_device: "{{ ansible_default_ipv4.interface }}"
+
+- name: add host ifcfg script for ip
+  template:
+    src: "{{ playbook_dir }}/roles/networking/templates/ifcfg_additional.j2"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ net_device }}:{{ net_name }}"
+
+- name: bring interface up
+  shell: ifup {{ net_device }}:{{ net_name }}

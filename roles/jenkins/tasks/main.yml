@@ -1,0 +1,71 @@
+
+- name: setup configured user group
+  group: name="jenkins" state=present gid=1002
+
+- name: add configured user
+  user: name="jenkins" group="jenkins" uid=1002
+
+- name: make a roomy place for jenkins work
+  file:
+    path: /home/jenkins
+    state: directory
+    owner: jenkins
+
+- name: create docker build location
+  file:
+    path: "/usr/local/dockerbuilds/jenkins/"
+    state: directory
+
+- name: copy docker files
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/dockerbuilds/jenkins/
+  with_items:
+    - "Dockerfile.pythons"
+    - "Dockerfile.dbdrivers"
+    - "install_cpython.sh"
+    - "freetds.conf"
+    - "libmemcached-build.patch"
+
+- name: copy odbc.ini template
+  template:
+    src: odbc.ini.j2
+    dest: /usr/local/dockerbuilds/jenkins/odbc.ini
+
+- name: build pythons image
+  docker_image:
+    name: "jenkins_pythons"
+    force_source: "{{ force_container_rebuild|bool }}"
+    build:
+      dockerfile: Dockerfile.pythons
+      path: "/usr/local/dockerbuilds/jenkins/"
+      pull: yes
+      args:
+        python_versions: "{{ cpython_versions | join(' ') }}"
+
+- name: build dbdrivers image
+  docker_image:
+    name: "jenkins"
+    force_source: "{{ force_container_rebuild|bool }}"
+    build:
+      dockerfile: Dockerfile.dbdrivers
+      path: "/usr/local/dockerbuilds/jenkins/"
+      pull: no
+
+- name: run container
+  docker_container:
+    image: "jenkins"
+    name: "jenkins"
+    restart_policy: always
+    networks:
+      - name: dbcontainers
+        ipv4_address: "{{ jenkins_runner_ip }}"
+    recreate: "{{ force_container_rebuild|bool }}"
+    env: TZ="America/New_York"
+    volumes:
+      - "/home/jenkins:/home/jenkins:Z"
+      - "/usr/local/jenkins/scripts/:/usr/local/jenkins/scripts/:ro"
+      - "/etc/hosts:/etc/hosts:ro"
+    user: "jenkins"
+    command: "-jnlpUrl https://jenkins.sqlalchemy.org/computer/{{ jenkins_slave_name }}/slave-agent.jnlp -secret {{ jenkins_secret }}"
+

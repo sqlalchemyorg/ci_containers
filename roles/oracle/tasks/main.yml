@@ -1,0 +1,63 @@
+- name: create docker build location
+  file:
+    path: /usr/local/dockerbuilds/oracle/
+    state: directory
+
+- name: copy Dockerfile etc to docker build location
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/dockerbuilds/oracle/
+  with_items:
+    - "Dockerfile"
+    - "functions"
+    - "README.txt"
+    - "oracle_responsefile.txt"
+    - "oracle_setup.sh"
+    - "oracle_setup.sql"
+    - "oracle_entrypoint.sh"
+
+- name: create selinux policy
+  script: create_selinux_module.sh
+  when: use_selinux
+
+- name: "build images"
+  docker_image:
+    name: "oracle_{{ item['version'] }}"
+    path: "/usr/local/dockerbuilds/oracle"
+    force: "{{ force_container_rebuild|bool }}"
+    pull: yes
+    buildargs:
+      product_version: "{{ item['version'] }}"
+  with_items: "{{ oracle_versions }}"
+
+- name: setup external network
+  include_tasks: "{{ playbook_dir }}/roles/networking/tasks/add_ip.yml"
+  vars:
+    ip_number: "{{ item['public_ip'] }}"
+    net_name: "{{ item['hostname'] }}"
+  when: add_public_network|bool
+  with_items: "{{ oracle_versions }}"
+
+- name: create oracle containers
+  docker_container:
+    image: "oracle_{{ item['version'] }}"
+    name: "oracle_{{ item['version'] }}"
+    restart_policy: always
+    recreate: "{{ force_container_rebuild|bool }}"
+    env: TZ="America/New_York"
+    published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"
+    networks:
+      - name: dbcontainers
+        ipv4_address: "{{ item['internal_ip'] }}"
+  vars:
+    published_ports:
+        - "{{ item['public_ip'] }}:1521:1521/tcp"
+        - "{{ item['public_ip'] }}:8085:8085/tcp"
+  with_items: "{{ oracle_versions }}"
+
+- name: add /etc/hosts entries
+  lineinfile:
+    path: /etc/hosts
+    regexp: ".*{{ item['hostname'] }}"
+    line: "{{ item['internal_ip'] }}    {{ item['hostname'] }}"
+  with_items: "{{ oracle_versions }}"

@@ -1,0 +1,8 @@
+{% for item in mssql_versions %}
+[{{ item['hostname'] }}]
+Driver = ODBC Driver 13 for SQL Server
+Server = {{ item['hostname'] }}
+Port = 1433
+Database = test
+{% endfor %}
+

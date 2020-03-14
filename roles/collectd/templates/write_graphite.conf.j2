@@ -1,0 +1,19 @@
+LoadPlugin write_graphite
+
+<Plugin write_graphite>
+    <Node "zotac">
+    Host graphite
+    Port "2003"
+    Protocol "tcp"
+    ReconnectInterval 0
+    LogSendErrors true
+    Prefix "collectd."
+    #Postfix "collectd"
+    StoreRates true
+    AlwaysAppendDS false
+    EscapeCharacter "_"
+    SeparateInstances false
+    PreserveSeparator false
+    DropDuplicateFields false
+    </Node>
+</Plugin>

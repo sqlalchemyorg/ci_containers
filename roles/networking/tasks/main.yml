@@ -1,0 +1,18 @@
+- set_fact:
+    net_device: "{{ ansible_default_ipv4.interface }}"
+    host_ipaddress: "{{ ansible_default_ipv4.address }}"
+
+- name: enable ipv4 forwarding
+  shell: 'echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.d/99-sysctl.conf'
+
+# note: network-scripts includes ifup / ifdown which no longer bundle w/ fedora 30 by default
+- name: install things
+  dnf:
+    name: "{{ items }}"
+    state: installed
+  vars:
+    items:
+      - net-tools
+      - policycoreutils-python-utils
+      - network-scripts
+

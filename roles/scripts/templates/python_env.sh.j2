@@ -1,0 +1,3 @@
+#!/bin/bash
+
+export PATH="{% for item in cpython_versions %}/opt/python-{{ item }}/bin/:{% endfor %}${PATH}"

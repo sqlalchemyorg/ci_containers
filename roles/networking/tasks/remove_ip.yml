@@ -1,0 +1,14 @@
+- set_fact:
+    net_device: "{{ ansible_default_ipv4.interface }}"
+
+- name: bring interface down
+  shell: |
+    if [[ -f "/etc/sysconfig/network-scripts/ifcfg-{{ net_device }}:{{ net_name }}" ]]; then
+      ifdown {{ net_device }}:{{ net_name }}
+    fi
+
+- name: remove host ifcfg script for ip
+  file:
+    path: "/etc/sysconfig/network-scripts/ifcfg-{{ net_device }}:{{ net_name }}"
+    state: absent
+
