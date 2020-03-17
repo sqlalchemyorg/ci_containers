@@ -22,6 +22,7 @@
   with_items:
     - categorize_gerrit_changes.sh
     - openstack.sh
+    - alembic_on_sqla.sh
     - sql_env.sh
     - sql_env_lite.sh
     - dbapi_master_gits.txt
