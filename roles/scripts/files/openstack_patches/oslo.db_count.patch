@@ -1,0 +1,45 @@
+commit 85573e07823556882117c21f42a098de7d470f7b
+Author: Mike Bayer <mike_mp@zzzcomputing.com>
+Date:   Mon Apr 6 10:38:29 2020 -0400
+
+    Modernize use of table.count() with func.count()
+    
+    The table.count() function in SQLAlchemy has been deprecated
+    since version 1.1 [1] and is being removed in version 1.4 [2] [3].
+    In order to maintain forwards compatibility as well as
+    suit SQLAlchemy's CI that includes oslo.db, replace this
+    one usage with modern use of func.count() as well as
+    explicit connection execution (engine.execute() is also
+    going away more long term).
+    
+    [1] https://docs.sqlalchemy.org/en/13/core/selectable.html?highlight=fromclause%20count#sqlalchemy.sql.expression.FromClause.count
+    [2] https://gerrit.sqlalchemy.org/c/sqlalchemy/sqlalchemy/+/1833
+    [3] https://github.com/sqlalchemy/sqlalchemy/issues/4643
+    
+    Change-Id: I2e4b9082194df6d916000c4f8f179f05d606e1a3
+
+diff --git a/oslo_db/tests/sqlalchemy/test_sqlalchemy.py b/oslo_db/tests/sqlalchemy/test_sqlalchemy.py
+index bde7303..c60ee74 100644
+--- a/oslo_db/tests/sqlalchemy/test_sqlalchemy.py
++++ b/oslo_db/tests/sqlalchemy/test_sqlalchemy.py
+@@ -115,10 +115,16 @@ class SQLiteSavepointTest(test_base._DbTestCase):
+             ).fetchall()
+         )
+         trans.rollback()
+-        self.assertEqual(
+-            0,
+-            self.engine.scalar(self.test_table.count())
+-        )
++
++        with self.engine.connect() as conn:
++            self.assertEqual(
++                0,
++                conn.scalar(
++                    sqlalchemy.select(
++                        [sqlalchemy.func.count(self.test_table.c.id)],
++                    ).select_from(self.test_table)
++                )
++            )
+ 
+     def test_savepoint_middle(self):
+         with self.engine.begin() as conn:
