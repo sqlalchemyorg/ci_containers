@@ -37,7 +37,16 @@ RUN \
 	make && make install && \
 	cd ..
 
+ARG sqlite_release_year=2020
+ARG sqlite_release_number=3310100
 
+RUN \
+	curl -L -O https://www.sqlite.org/${sqlite_release_year}/sqlite-autoconf-${sqlite_release_number}.tar.gz && \
+	tar -xf sqlite-autoconf-${sqlite_release_number}.tar.gz && \
+	cd sqlite-autoconf-${sqlite_release_number} && \
+	./configure --prefix /opt/sqlite3 && \
+	make && make install && \
+	cd ..
 
 # install SQL Server client stuff
 ENV ACCEPT_EULA="Y"
