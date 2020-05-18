@@ -24,6 +24,7 @@
     - "Dockerfile.pythons"
     - "Dockerfile.dbdrivers"
     - "install_cpython.sh"
+    - "install_sqlite.sh"
     - "freetds.conf"
     - "libmemcached-build.patch"
 
@@ -35,13 +36,14 @@
 - name: build pythons image
   docker_image:
     name: "jenkins_pythons"
-    force_source: "{{ force_container_rebuild|bool }}"
+#    force_source: "{{ force_container_rebuild|bool }}"
     build:
       dockerfile: Dockerfile.pythons
       path: "/usr/local/dockerbuilds/jenkins/"
       pull: yes
       args:
         python_versions: "{{ cpython_versions | join(' ') }}"
+    source: build
 
 - name: build dbdrivers image
   docker_image:
@@ -51,6 +53,9 @@
       dockerfile: Dockerfile.dbdrivers
       path: "/usr/local/dockerbuilds/jenkins/"
       pull: no
+      args:
+        sqlite_versions: "{{ sqlite_versions | join(' ') }}"
+    source: build
 
 - name: run container
   docker_container:

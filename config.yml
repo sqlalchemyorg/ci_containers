@@ -69,4 +69,7 @@ oracle_versions:
   - {"version": "11.2.0", "hostname": "oracle1120",
      "public_ip": "192.168.1.205", "internal_ip": "172.18.0.2", }
 
+sqlite_versions:
+  - "2020_3310100"
+
 jenkins_runner_ip: "172.18.0.13"
