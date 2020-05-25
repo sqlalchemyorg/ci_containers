@@ -36,7 +36,7 @@
 - name: build pythons image
   docker_image:
     name: "jenkins_pythons"
-#    force_source: "{{ force_container_rebuild|bool }}"
+    force_source: "{{ force_container_rebuild|bool }}"
     build:
       dockerfile: Dockerfile.pythons
       path: "/usr/local/dockerbuilds/jenkins/"

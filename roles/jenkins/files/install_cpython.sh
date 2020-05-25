@@ -59,7 +59,7 @@ function install_python() {
 	/opt/python${SIMPLE_NUMBER}/bin/${PYTHON_INTERP_NAME} /usr/local/src/get-pip.py
 
 
-	/opt/python${SIMPLE_NUMBER}/bin/${PIP_NAME} install pip tox coverage --upgrade
+	/opt/python${SIMPLE_NUMBER}/bin/${PIP_NAME} install pip tox coverage flake8-junit-report --upgrade
 }
 
 for python_version in $@; do
