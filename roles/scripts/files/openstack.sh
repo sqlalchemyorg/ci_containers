@@ -133,6 +133,7 @@ prepare_sqlalchemy_migrate()
         git clone ${X_GIT_BASE}sqlalchemy-migrate
     fi
     cd ${GIT_NAME}
+    git remote set-url origin ${X_GIT_BASE}sqlalchemy-migrate
     git reset --hard origin/master
     git pull
 
@@ -164,6 +165,7 @@ prepare_repaired_oslo_cache()
         git clone ${OPENSTACK_GIT_BASE}oslo.cache
     fi
     cd ${GIT_NAME}
+    git remote set-url origin ${OPENSTACK_GIT_BASE}oslo.cache
     git reset --hard origin/master
     git pull
     sed -i.tmp "s/^dogpile.cache.*/dogpile.cache/" requirements.txt
@@ -228,6 +230,7 @@ prepare_openstack_project ()
     if [[ -d ${PROJECT} ]]; then
         cd ${PROJECT}
         git reset --hard
+        git remote set-url origin ${OPENSTACK_GIT_BASE}${PROJECT}.git
         git pull origin master
     else
         git clone ${OPENSTACK_GIT_BASE}${PROJECT}.git
