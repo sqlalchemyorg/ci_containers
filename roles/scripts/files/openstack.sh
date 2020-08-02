@@ -1,8 +1,8 @@
 #!/bin/bash
 
 GITHUB_GIT_BASE=https://github.com/sqlalchemy/
-OPENSTACK_GIT_BASE=https://review.openstack.org/p/openstack/
-X_GIT_BASE=https://review.openstack.org/p/x/
+OPENSTACK_GIT_BASE=https://opendev.org/openstack/
+X_GIT_BASE=https://opendev.org/x/
 GERRIT_BASE=https://gerrit.sqlalchemy.org/sqlalchemy/
 
 SCRIPT_BASE=/usr/local/jenkins/scripts
