@@ -20,8 +20,22 @@ RUN \
 	echo 'export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ORACLE_HOME}/lib' >> /etc/profile.d/oracle_env.sh && \
 	cd .. && rm -fr oracle
 
-# dogpile.cache tests use these on demand
-RUN yum install -y redis memcached
+# dogpile.cache tests use redis on demand
+RUN yum install -y redis
+
+# dogpile.cache tests use memcached on demand
+#
+# installing a newer version than the one provided by yum because we need
+# TLS support enable.  Once the yum package catches up, this can be reverted.
+RUN \
+	curl -L -O https://memcached.org/files/memcached-1.5.22.tar.gz && \
+	tar -xf memcached-1.5.22.tar.gz && \
+	yum install -y libevent-devel && \
+	cd memcached-1.5.22 && \
+	./configure --enable-sasl --enable-sasl-pwdb 	--enable-tls && \
+	make -j "$(nproc)" && \
+	make install && \
+	cd ..
 
 
 COPY install_sqlite.sh /usr/local/src/install_sqlite.sh
