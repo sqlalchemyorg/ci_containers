@@ -26,6 +26,14 @@ export TOX_POSTGRESQL=\
 "--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg96/test "
 
+export TOX_POSTGRESQL_W_PG8000=\
+"--postgresql-templatedb=ci_template "\
+"--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
+"--dburi postgresql+pg8000://scott:tiger@pg12/test "\
+"--dburi postgresql+psycopg2://scott:tiger@pg11/test "\
+"--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
+"--dburi postgresql+psycopg2://scott:tiger@pg96/test "
+
 
 export TOX_ORACLE="--dburi oracle+cx_oracle://scott:tiger@oracle1120/xe"
 
