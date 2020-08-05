@@ -1,19 +1,25 @@
-FROM centos
+# mysql 5.x series dont seem to be on centos8....
+FROM centos:7
 
 ARG product_version=5.7
 ARG yumrepo=mysql80-community-release-el7-1.noarch.rpm
 WORKDIR /opt
 
-RUN \
-	curl -OL https://dev.mysql.com/get/${yumrepo}
+RUN yum install -y yum-utils
+
+# centos8 only
+# RUN yum module disable -y mysql
 
 RUN \
-	rpm -i ${yumrepo} && \
-	yum-config-manager --disable mysql80-community && \
-	yum-config-manager --disable mysql57-community && \
-	yum-config-manager --disable mysql56-community && \
-	yum-config-manager --enable mysql`echo "${product_version}" | awk -F. '{ print $1$2 }'`-community && \
-	yum install -y mysql-community-server
+    curl -OL https://dev.mysql.com/get/${yumrepo}
+
+RUN \
+    rpm -i ${yumrepo} && \
+    yum-config-manager --disable mysql80-community && \
+    yum-config-manager --disable mysql57-community && \
+    yum-config-manager --disable mysql56-community && \
+    yum-config-manager --enable mysql`echo "${product_version}" | awk -F. '{ print $1$2 }'`-community && \
+    yum install -y mysql-community-server
 
 # https://bugs.mysql.com/bug.php?id=91395
 # https://dev.mysql.com/doc/refman/8.0/en/resource-groups.html#resource-group-restrictions
@@ -25,8 +31,8 @@ COPY ./mysql_setup.sh /
 COPY ./mysql_entrypoint.sh /
 
 RUN \
-	chmod 755 /mysql_setup.sh /mysql_entrypoint.sh && \
-	/mysql_setup.sh "mysql_${product_version}"
+    chmod 755 /mysql_setup.sh /mysql_entrypoint.sh && \
+    /mysql_setup.sh "mysql_${product_version}"
 
 EXPOSE 3306
 

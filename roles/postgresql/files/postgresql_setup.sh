@@ -2,6 +2,7 @@
 
 set -x
 
+
 POSTGRESQL_VERSION=$1
 
 ln -s /usr/pgsql-${POSTGRESQL_VERSION} /usr/pgsql
@@ -29,7 +30,10 @@ chown postgres:postgres "$PGLOG"
 chmod go-rwx "$PGLOG"
 
 # Initialize the database
-initdbcmd="$POSTGRESQL_BIN/initdb --pgdata='$PGDATA' --auth='ident'"
+# locale thing: https://stackoverflow.com/questions/50746147/postgresqls-initdb-fails-with-invalid-locale-settings-check-lang-and-lc-e/50748554
+#initdbcmd="$POSTGRESQL_BIN/initdb --pgdata='$PGDATA' --auth='ident' --no-locale --encoding=UTF8"
+initdbcmd="$POSTGRESQL_BIN/initdb --pgdata='$PGDATA' --auth='ident' --locale en_US.UTF8  --encoding=UTF8"
+
 
 ${RUNASPG} "$initdbcmd" >> "$PGLOG" 2>&1 < /dev/null
 

@@ -4,6 +4,11 @@ ARG product_version=10.4.12
 
 WORKDIR /opt
 
+RUN yum install -y yum-utils
+
+# centos8 thing....grrrr
+# RUN yum module disable -y mariadb
+
 RUN \
     curl -O https://downloads.mariadb.com/MariaDB/mariadb-${product_version}/yum/rhel/mariadb-${product_version}-rhel-7-x86_64-rpms.tar
 
