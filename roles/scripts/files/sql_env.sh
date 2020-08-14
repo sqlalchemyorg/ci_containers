@@ -26,6 +26,12 @@ export TOX_POSTGRESQL=\
 "--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg96/test "
 
+if [[ "${pyv}" == *"py2"* ]]; then
+export TOX_POSTGRESQL_W_PG8000="${TOX_POSTGRESQL}"
+
+export TOX_POSTGRESQL_MASTER="${TOX_POSTGRESQL}"
+
+else
 export TOX_POSTGRESQL_W_PG8000=\
 "--postgresql-templatedb=ci_template "\
 "--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
@@ -34,6 +40,17 @@ export TOX_POSTGRESQL_W_PG8000=\
 "--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg96/test "
 
+export TOX_POSTGRESQL_MASTER=\
+"--postgresql-templatedb=ci_template "\
+"--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
+"--dburi postgresql+asyncpg://scott:tiger@pg12/test?async_fallback=true "\
+"--dburi postgresql+psycopg2://scott:tiger@pg11/test "\
+"--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
+"--dburi postgresql+psycopg2://scott:tiger@pg96/test "
+
+
+
+fi
 
 export TOX_ORACLE="--dburi oracle+cx_oracle://scott:tiger@oracle1120/xe"
 
