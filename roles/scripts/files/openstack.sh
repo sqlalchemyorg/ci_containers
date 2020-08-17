@@ -73,7 +73,7 @@ setup ()
     export UPPER_CONSTRAINTS_FILE=${WORKSPACE}/upper_constraints.txt
     export TOX_TESTENV_PASSENV="UPPER_CONSTRAINTS_FILE ${TOX_TESTENV_PASSENV}"
 
-    curl "$UPPER_CONSTRAINTS" -L --insecure --progress-bar --output ${UPPER_CONSTRAINTS_FILE}
+    curl --retry 3 "$UPPER_CONSTRAINTS" -L --insecure --progress-bar --output ${UPPER_CONSTRAINTS_FILE}
 
     for keyword in SQLAlchemy alembic dogpile.cache oslo.db oslo.cache sqlalchemy-migrate ; do
         sed -i.tmp "s/^${keyword}.*//" ${UPPER_CONSTRAINTS_FILE};
