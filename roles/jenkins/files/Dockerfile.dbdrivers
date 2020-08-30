@@ -2,8 +2,16 @@ FROM jenkins_pythons
 
 ARG sqlite_versions="2020_3310100"
 
-# install mysql client libs, postgresql client libs
-RUN yum install -y mariadb-devel mariadb postgresql postgresql-devel
+
+# install mariadb packages, outside of centos packaging
+RUN \
+	yum module disable -y mariadb && \
+    curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s --  && \
+    yum install -y MariaDB-devel MariaDB-client  MariaDB-shared
+
+
+# install postgresql client libs
+RUN yum install -y postgresql postgresql-devel
 
 # install oracle xe to get client libraries
 # libnsl: DPI-1047: 64-bit Oracle Client library cannot be loaded: "libnsl.so.1:
