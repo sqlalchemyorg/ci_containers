@@ -1,5 +1,5 @@
 - name: deploy base services
-  hosts: target
+  hosts: local, cloud
   gather_facts: no
   become: yes
   become_user: "root"
@@ -9,7 +9,7 @@
     - { role: docker, tags: ['docker']}
 
 - name: deploy databases
-  hosts: target
+  hosts: local, cloud
   gather_facts: no
   become: yes
   become_user: "root"
@@ -23,16 +23,34 @@
   become_user: "root"
   roles:
     - { role: mysql, tags: ['mysql']}
+
+- name: deploy heavy-only databases
+  hosts: heavy
+  gather_facts: no
+  become: yes
+  become_user: "root"
+  roles:
     - { role: oracle, tags: ['oracle']}
     - { role: mssql, tags: ['mssql']}
 
 - name: deploy jenkins, front-facing services
-  hosts: target
+  hosts: local
   gather_facts: no
   become: yes
   become_user: "root"
   roles:
     - { role: jenkins, tags: ['jenkins']}
+    - { role: scripts, tags: ['scripts']}  # scripts is dependent on jenkins
+    # - { role: collectd, tags: ['collectd']}
+
+
+- name: deploy jenkins cloud, front-facing services
+  hosts: cloud
+  gather_facts: no
+  become: yes
+  become_user: "root"
+  roles:
+    - { role: jenkins_cloud, tags: ['jenkins']}
     - { role: scripts, tags: ['scripts']}  # scripts is dependent on jenkins
     # - { role: collectd, tags: ['collectd']}
 

@@ -32,6 +32,11 @@
   tags:
     - always
 
+- name: create ansible user if not exists
+  user:
+    name: "{{ ansible_user }}"
+    state: present
+
 # This allows this to work:
 # sudo -H -S  -u gmvault bash
 # using the %wheel group for some reason doesn't allow that.

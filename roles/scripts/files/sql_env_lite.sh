@@ -1,7 +1,9 @@
 #!/bin/bash
 
 source /usr/local/jenkins/scripts/python_env.sh
-source /etc/profile.d/oracle_env.sh
+if [ -f /etc/profile.d/oracle_env.sh ] ; then
+	source /etc/profile.d/oracle_env.sh
+fi
 
 # TODO: template this....
 

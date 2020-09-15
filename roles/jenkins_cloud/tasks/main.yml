@@ -1,0 +1,142 @@
+
+- name: setup configured user group
+  group: name="jenkins" state=present gid=1002
+
+- name: add configured user
+  user: name="jenkins" group="jenkins" uid=1002
+
+- name: make a roomy place for jenkins work
+  file:
+    path: /home/jenkins
+    state: directory
+    owner: jenkins
+
+- name: make another roomy place for jenkins work
+  file:
+    path: /usr/local/jenkins
+    state: directory
+    owner: jenkins
+
+- name: add cloud jenkins public key
+  authorized_key:
+    user: jenkins
+    state: present
+    key: "{{ cloud_jenkins_public_key }}"
+
+
+- name: copy build scripts
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/src/
+  with_items:
+    - "../../roles/jenkins/files/install_cpython.sh"
+    - "../../roles/jenkins/files/install_sqlite.sh"
+    - "../../roles/jenkins/files/freetds.conf"
+
+- name: chmod scripts
+  file:
+      path: "/usr/local/src/{{ item }}"
+      mode: 0755
+  with_items:
+    - "install_cpython.sh"
+    - "install_sqlite.sh"
+
+- name: copy odbc.ini template
+  template:
+    src: "../../roles/jenkins/templates/odbc.ini.j2"
+    dest: /usr/local/src/odbc.ini
+
+- name: install libraries
+  dnf: name="{{ items }}" state=installed
+  vars:
+    items:
+      - java
+      - openldap-devel
+      - patch
+      - xz
+      - bzip2
+      - procps
+      - git
+      - zip
+      - unzip
+      - net-tools
+      - glibc-langpack-en
+      - gcc
+      - gcc-c++
+      - make
+      - cmake
+      - bzip2-devel
+      - zlib-devel
+      - openssl-devel
+      - libffi-devel
+      - sqlite-devel
+      - readline-devel
+      - ncurses-devel
+      - bzip2-devel
+      - gdbm-devel
+      - zlib-devel
+      - tk-devel
+      - libdb-devel
+      - xz-devel
+      - expat-devel
+
+
+- name: get pip
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /usr/local/src
+    mode: '0775'
+
+- name: run python install thing
+  shell: |
+    /usr/local/src/install_cpython.sh "{{ cpython_versions | join(' ') }}"
+
+- name: install mariadb / postgresql / memcached / etc
+  dnf: name="{{ items }}" state=installed
+  vars:
+    items:
+      - mariadb
+      - postgresql
+      - postgresql-devel
+      - mariadb-devel
+      # 1.5.22 is installed on fedora 32 which is what we need
+      - memcached
+      # 1.0.18, it's good
+      - libmemcached-devel
+      - redis
+
+  # not working, cloud server has no swap configured, oracle won't install w/o it.
+  # cx_Oracle has wheels in any case
+- name: lazily copy scripts from docker - oracle client
+  shell: |
+    cd /usr/local/src
+    yum install -y libaio-devel libnsl bc redhat-rpm-config
+    mkdir /usr/local/src/oracle
+    cd /usr/local/src/oracle
+    curl -L -O https://jenkins.sqlalchemy.org/downloads/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+    unzip oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+    yum install -y /usr/local/src/oracle/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm
+    ln -s /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh /etc/profile.d/oracle_env.sh
+    echo 'export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ORACLE_HOME}/lib' >> /etc/profile.d/oracle_env.sh
+    cd .. && rm -fr oracle
+  when: false
+
+- name: lazily copy scripts from docker - sqlite
+  shell: |
+      /usr/local/src/install_sqlite.sh "{{ sqlite_versions | join(' ') }}"
+
+
+- name: lazily copy scripts from docker - SQL server
+  shell: |
+    cd /usr/local/src
+    export ACCEPT_EULA="Y"
+    curl -L -O https://packages.microsoft.com/config/rhel/7/prod.repo
+    mv prod.repo /etc/yum.repos.d/mssql-release.repo
+    yum install -y unixODBC unixODBC-devel redhat-rpm-config freetds freetds-devel msodbcsql mssql-tools
+
+    cp odbc.ini /etc/odbc.ini
+    cp freetds.conf /etc/freetds.conf
+
+
+
+

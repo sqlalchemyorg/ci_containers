@@ -2,6 +2,7 @@
   dnf: name="{{ items }}" state=installed
   vars:
     items:
+      # note: they are calling this moby at least as of fedora 32
       - docker
       - python3-docker
       - git
@@ -10,6 +11,18 @@
 
 - set_fact:
     docker_home: /home/docker
+
+- name: do cgroups fedora hack thing dammit
+  shell: |
+    sudo dnf install grubby
+    sudo grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+  when:
+      ansible_distribution == "Fedora" and ansible_distribution_major_version > '30'
+
+- name: now reboot
+  reboot:
+  when:
+      ansible_distribution == "Fedora" and ansible_distribution_major_version > '30'
 
 - name: create docker homedir (owned by root)
   file:
@@ -32,6 +45,8 @@
   template:
     src: daemon.json.j2
     dest: /etc/docker/daemon.json
+  when:
+    ansible_distribution == "Fedora" and ansible_distribution_major_version < '32'
 
 - name: disable docker-storage-setup
   systemd:
@@ -39,6 +54,8 @@
     enabled: no
     masked: yes
     state: stopped
+  when:
+      ansible_distribution == "Fedora" and ansible_distribution_major_version < '32'
 
 - name: enable and start docker
   systemd:

@@ -1,13 +1,22 @@
 
-[target]
+[local]
 dell jenkins_secret="{{ dell_secret }}" jenkins_slave_name="dell" add_public_network=true
 d2 jenkins_secret="{{ d2_secret }}" jenkins_slave_name="d2"
 d3 jenkins_secret="{{ d3_secret }}" jenkins_slave_name="d3"
 
+
+[cloud]
+do1 ansible_host=104.248.123.8  ansible_ssh_user=root
+do2 ansible_host=161.35.109.73 ansible_ssh_user=root
+
 [fast]
 dell
 d3
+do1
 
+[heavy]
+dell
+d3
 
 
 [all:vars]
