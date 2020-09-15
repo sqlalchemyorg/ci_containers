@@ -5,7 +5,9 @@ set -x
 
 source /usr/local/jenkins/scripts/sql_env.sh
 
-TARGETS="sqlamaster-sqlite-postgresql-mysql-oracle"
+# we want to run on light weight instances so
+# don't include oracle for the moment
+TARGETS="sqlamaster-sqlite-postgresql-mysql"
 #TARGETS="sqlamaster-sqlite"
 
 

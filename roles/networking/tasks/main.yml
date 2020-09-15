@@ -16,3 +16,10 @@
       - policycoreutils-python-utils
       - network-scripts
 
+- name: disable cloud etc/hosts thing
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    regexp: .*update_etc_hosts
+    state: absent
+  when:
+    - inventory_hostname in groups['cloud']
