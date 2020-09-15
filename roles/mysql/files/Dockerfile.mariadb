@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:8
 
 ARG product_version=10.4.12
 
@@ -7,15 +7,14 @@ WORKDIR /opt
 RUN yum install -y yum-utils
 
 # centos8 thing....grrrr
-# RUN yum module disable -y mariadb
+RUN yum module disable -y mariadb
 
 RUN \
-    curl -O https://downloads.mariadb.com/MariaDB/mariadb-${product_version}/yum/rhel/mariadb-${product_version}-rhel-7-x86_64-rpms.tar
+    curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=${product_version}
+
 
 RUN \
-    tar -xf mariadb-${product_version}-rhel-7-x86_64-rpms.tar && \
-    mariadb-${product_version}-rhel-7-x86_64-rpms/setup_repository && \
-    yum install -y mariadb-server
+    yum install -y MariaDB-server MariaDB-devel MariaDB-client  MariaDB-shared
 
 COPY ./mysql_setup.sh /
 COPY ./mysql_entrypoint.sh /
