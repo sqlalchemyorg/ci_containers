@@ -16,11 +16,14 @@
 - name: "build images"
   docker_image:
     name: "mssql_{{ item['version'] }}"
-    path: "/usr/local/dockerbuilds/mssql"
-    force: "{{ force_container_rebuild|bool }}"
-    pull: yes
-    buildargs:
-      product_version: "{{ item['version'] }}"
+    force_source: "{{ force_container_rebuild|bool }}"
+    source: build
+    build:
+      path: "/usr/local/dockerbuilds/mssql"
+      pull: yes
+      nocache: yes
+      args:
+        product_version: "{{ item['version'] }}"
   with_items: "{{ mssql_versions }}"
 
 - name: setup external network

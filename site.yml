@@ -23,6 +23,7 @@
   become_user: "root"
   roles:
     - { role: mysql, tags: ['mysql']}
+    - { role: mssql, tags: ['mssql']}
 
 - name: deploy heavy-only databases
   hosts: heavy
@@ -31,7 +32,6 @@
   become_user: "root"
   roles:
     - { role: oracle, tags: ['oracle']}
-    - { role: mssql, tags: ['mssql']}
 
 - name: deploy jenkins, front-facing services
   hosts: local

@@ -8,7 +8,7 @@ export MSSQL_PID=Developer
 
 /opt/mssql/bin/sqlservr & PID=$!
 
-sleep 10s
+sleep 30s
 
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD}" -d master -i /mssql_setup.sql
 
