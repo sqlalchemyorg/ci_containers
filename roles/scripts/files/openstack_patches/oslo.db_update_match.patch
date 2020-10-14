@@ -1,0 +1,32 @@
+commit 3313c6ad2dd1871a5fb8d6884dc8fee81a6a7b19
+Author: Mike Bayer <mike_mp@zzzcomputing.com>
+Date:   Wed Oct 14 10:39:43 2020 -0400
+
+    Don't use private API to get query criteria
+    
+    Another change for SQLAlchemy 1.4 is the mechanics
+    of how the ``QueryContext`` object works.   Update the
+    update_match extension such that it does not rely upon the
+    ``QueryContext`` object and uses public APIs instead.
+    
+    Change-Id: I27e20e59bce8c98b5a507c617364652aa6eb33f5
+
+diff --git a/oslo_db/sqlalchemy/update_match.py b/oslo_db/sqlalchemy/update_match.py
+index 8e139e9..577fb81 100644
+--- a/oslo_db/sqlalchemy/update_match.py
++++ b/oslo_db/sqlalchemy/update_match.py
+@@ -484,11 +484,10 @@ def _update_stmt_from_query(mapper, query, values):
+             mapper.column_attrs[key], value
+         ) for key, value in values.items()
+     )
+-    query = query.enable_eagerloads(False)
+-    context = query._compile_context()
+-    primary_table = context.statement.froms[0]
++    primary_table = inspect(query.column_descriptions[0]['entity']).local_table
++    where_criteria = query.whereclause
+     update_stmt = sql.update(primary_table,
+-                             context.whereclause,
++                             where_criteria,
+                              upd_values)
+     return update_stmt
+ 
