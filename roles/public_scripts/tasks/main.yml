@@ -1,0 +1,64 @@
+- name: set mariadb openstack host
+  set_fact:
+    openstack_mariadb_host: "{{ item['hostname'] }}"
+  when: "{{ item['openstack'] | default(false) }}"
+  with_items: "{{ mysql_versions }}"
+
+- name: set postgresql openstack host
+  set_fact:
+    openstack_postgresql_host: "{{ item['hostname'] }}"
+  when: "{{ item['openstack'] | default(false) }}"
+  with_items: "{{ postgresql_versions }}"
+
+- name: create scripts directory
+  file:
+    path: /www/hosts/jenkins.sqlalchemy.org/static/scripts
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: apache
+    setype: httpd_sys_content_t
+    mode: 0755
+
+- name: copy environment files
+  copy:
+    src: "../../scripts/files/{{ item }}"
+    dest: /www/hosts/jenkins.sqlalchemy.org/static/scripts
+    owner: "{{ ansible_user }}"
+    setype: httpd_sys_content_t
+    group: apache
+    mode: "u=rwx,g=rx"
+  with_items:
+    - categorize_gerrit_changes.sh
+    - alembic_on_sqla.sh
+    - dbapi_master_gits.txt
+
+- name: copy environment template files
+  template:
+    src: "../../scripts/templates/{{ item }}.j2"
+    dest: "/www/hosts/jenkins.sqlalchemy.org/static/scripts/{{ item }}"
+    owner: "{{ ansible_user }}"
+    setype: httpd_sys_content_t
+    group: apache
+    mode: "u=rwx,g=rx"
+  with_items:
+    - python_env.sh
+    - openstack.sh
+    - sql_env.sh
+    - sql_env_lite.sh
+
+
+- name: synchronize openstack patches
+  synchronize:
+    src: ../../scripts/files/openstack_patches/
+    dest: /www/hosts/jenkins.sqlalchemy.org/static/scripts/openstack_patches/
+    delete: yes
+    recursive: yes
+
+
+- name: create tar.gz for download
+  shell: |
+      cd /www/hosts/jenkins.sqlalchemy.org/static/
+      rm -f scripts/scripts.tar.gz
+      tar -zcf scripts.tar.gz scripts
+      mv scripts.tar.gz scripts/
+      chown {{ ansible_user }}:apache scripts/scripts.tar.gz

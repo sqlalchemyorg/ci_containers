@@ -43,6 +43,13 @@
     - { role: scripts, tags: ['scripts']}  # scripts is dependent on jenkins
     # - { role: collectd, tags: ['collectd']}
 
+- name: deploy special jenkins linode files
+  hosts: public_facing
+  gather_facts: no
+  become: yes
+  become_user: root
+  roles:
+    - { role: public_scripts, tags: ['scripts', 'public_scripts']}
 
 - name: deploy jenkins cloud, front-facing services
   hosts: cloud
