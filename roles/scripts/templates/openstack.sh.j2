@@ -19,11 +19,11 @@ PATCHES=${SCRIPT_BASE}/openstack_patches
 db_urls ()
 {
     if [[ ! $GERRIT || $prj_mysql || $prj_core || $prj_keystone ]]; then
-        MYSQL=";mysql+pymysql://openstack_citest:openstack_citest@mariadb103/openstack_citest?charset=utf8"
+        MYSQL=";mysql+pymysql://openstack_citest:openstack_citest@{{ openstack_mariadb_host }}/openstack_citest?charset=utf8"
     fi
 
     if [[ ! $GERRIT || $prj_postgresql || $prj_core ]]; then
-        POSTGRESQL=";postgresql+psycopg2://openstack_citest:openstack_citest@pg94/openstack_citest"
+        POSTGRESQL=";postgresql+psycopg2://openstack_citest:openstack_citest@{{ openstack_postgresql_host }}/openstack_citest"
     fi
 
     # TODO: template these
@@ -108,6 +108,8 @@ upstream_deps() {
 
     prepare_repaired_oslo_cache
 
+    prepare_repaired_oslo_db
+
     prepare_sqlalchemy_migrate
 }
 
@@ -144,11 +146,42 @@ prepare_sqlalchemy_migrate()
 
     for patchfile in `ls ${PATCHES}/${PACKAGE}_*.patch`
     do
-        patch -p1 < ${patchfile}
+        patch -f -p1 < ${patchfile} || true
     done
 
     # note this won't work if the patch adds new files
     git commit -a --allow-empty -m "apply patches"
+
+    echo "git+file://${WORKSPACE}/${GIT_NAME}@master#egg=${PACKAGE}" >> ${UPPER_CONSTRAINTS_FILE}
+
+}
+
+prepare_repaired_oslo_db()
+{
+    PACKAGE=oslo.db
+    GIT_NAME=oslo.db
+
+    cd ${WORKSPACE}
+
+    if [[ ! -d ${GIT_NAME} ]]; then
+        git clone ${OPENSTACK_GIT_BASE}oslo.db
+    fi
+    cd ${GIT_NAME}
+    git remote set-url origin ${OPENSTACK_GIT_BASE}oslo.db
+    git reset --hard origin/master
+    git pull
+
+    for patchfile in `ls ${PATCHES}/oslo.db_*.patch`
+    do
+        patch -f -p1 < ${patchfile} || true
+    done
+
+    # has to be a git install.  so we have to commit the file.  whatevs.
+
+    git config user.email "jenkins@sqlalchemy.org"
+    git config user.name "Jenkins SQLAlchemy"
+
+    git commit -m "apply oslo.db patches" oslo_db
 
     echo "git+file://${WORKSPACE}/${GIT_NAME}@master#egg=${PACKAGE}" >> ${UPPER_CONSTRAINTS_FILE}
 
@@ -239,7 +272,7 @@ prepare_openstack_project ()
 
     for patchfile in `ls ${PATCHES}/${PROJECT}_*.patch`
     do
-        patch -p1 < ${patchfile}
+        patch -f -p1 < ${patchfile} || true
     done
 
 }

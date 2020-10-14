@@ -8,6 +8,18 @@
       - patch
       - pcre-devel
 
+- name: set mariadb openstack host
+  set_fact:
+    openstack_mariadb_host: "{{ item['hostname'] }}"
+  when: "{{ item['openstack'] | default(false) }}"
+  with_items: "{{ mysql_versions }}"
+
+- name: set postgresql openstack host
+  set_fact:
+    openstack_postgresql_host: "{{ item['hostname'] }}"
+  when: "{{ item['openstack'] | default(false) }}"
+  with_items: "{{ postgresql_versions }}"
+
 - name: create scripts directory
   file:
     path: /usr/local/jenkins/scripts
@@ -21,10 +33,7 @@
     mode: "u=rwx,g=rx"
   with_items:
     - categorize_gerrit_changes.sh
-    - openstack.sh
     - alembic_on_sqla.sh
-    - sql_env.sh
-    - sql_env_lite.sh
     - dbapi_master_gits.txt
 
 - name: copy environment template files
@@ -35,6 +44,10 @@
     mode: "u=rwx,g=rx"
   with_items:
     - python_env.sh
+    - openstack.sh
+    - sql_env.sh
+    - sql_env_lite.sh
+
 
 - name: synchronize openstack patches
   synchronize:
