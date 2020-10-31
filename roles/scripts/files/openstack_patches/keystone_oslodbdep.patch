@@ -1,0 +1,30 @@
+commit 9877c0434d83753102e9f89005660537ac687211
+Author: Mike Bayer <mike_mp@zzzcomputing.com>
+Date:   Fri Oct 30 20:35:32 2020 -0400
+
+    Ignore oslo.db deprecating sqlalchemy-migrate warning
+    
+    In I59335b4f318bae2e29ab139cdea089a4d6e14305, oslo.db
+    is now emitting deprecation warnings for SQLAlchemy-migrate
+    functions.  This breaks Keystone tests which raise on
+    DeprecationWarning, so add to the filters.
+    
+    Change-Id: I42f0abc2ddf8c53239d5098d5f32b667314b942d
+
+diff --git a/keystone/tests/unit/core.py b/keystone/tests/unit/core.py
+index 3c65bfbe6..c709e696a 100644
+--- a/keystone/tests/unit/core.py
++++ b/keystone/tests/unit/core.py
+@@ -679,8 +679,12 @@ class BaseTestCase(testtools.TestCase):
+                                                  side_effect=UnexpectedExit))
+         self.useFixture(log_fixture.get_logging_handle_error_fixture())
+ 
++
+         warnings.filterwarnings('error', category=DeprecationWarning,
+                                 module='^keystone\\.')
++        warnings.filterwarnings(
++            'ignore', category=DeprecationWarning,
++             message=r"Using function/method 'db_version\(\)' is deprecated")
+         warnings.simplefilter('error', exc.SAWarning)
+         if hasattr(exc, "RemovedIn20Warning"):
+             warnings.simplefilter('ignore', exc.RemovedIn20Warning)
