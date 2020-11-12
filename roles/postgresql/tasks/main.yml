@@ -28,12 +28,14 @@
 - name: "build images"
   docker_image:
     name: "postgresql_{{ item['version'] }}"
-    path: "/usr/local/dockerbuilds/postgresql"
-    force: "{{ force_container_rebuild|bool }}"
-    pull: yes
-    buildargs:
-      product_version: "{{ item['version'] }}"
-      repotag: "{{ item['repotag'] }}"
+    force_source: "{{ force_container_rebuild|bool }}"
+    source: "build"
+    state: present
+    build:
+      path: "/usr/local/dockerbuilds/postgresql"
+      pull: yes
+      args:
+        product_version: "{{ item['version'] }}"
   with_items: "{{ postgresql_versions }}"
 
 - name: setup external network

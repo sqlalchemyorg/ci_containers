@@ -1,7 +1,6 @@
 FROM centos
 
 ARG product_version=9.6
-ARG repotag=9.6-3
 
 WORKDIR /opt
 
@@ -16,7 +15,7 @@ RUN \
 
 RUN \
 	VERSION_TOKEN=`echo "${product_version}" | awk -F. '{ print $1$2 }'` && \
-	curl -OL https://download.postgresql.org/pub/repos/yum/${product_version}/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm && \
+	curl -OL https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm && \
 	rpm -i pgdg-redhat-repo-latest.noarch.rpm
 
 # centos8 thing

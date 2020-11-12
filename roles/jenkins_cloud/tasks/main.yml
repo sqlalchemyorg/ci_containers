@@ -79,7 +79,7 @@
       - libdb-devel
       - xz-devel
       - expat-devel
-
+      - which
 
 - name: get pip
   get_url:
@@ -99,11 +99,25 @@
       - postgresql
       - postgresql-devel
       - mariadb-devel
-      # 1.5.22 is installed on fedora 32 which is what we need
-      - memcached
+      # memcached 1.5.22 is installed on fedora 32 which is what we need
+      # but it has no SSL :(
       # 1.0.18, it's good
       - libmemcached-devel
       - redis
+
+- name: uninstall memcached
+  dnf: name="memcached" state=absent
+
+- name: build memcached by hand
+  shell: |
+    cd /usr/local/src
+    curl -L -O https://memcached.org/files/memcached-1.6.6.tar.gz
+    tar -xf memcached-1.6.6.tar.gz
+    yum install -y libevent-devel
+    cd memcached-1.6.6
+    ./configure --enable-sasl --enable-sasl-pwdb  --enable-tls
+    make -j "$(nproc)"
+    make install
 
   # not working, cloud server has no swap configured, oracle won't install w/o it.
   # cx_Oracle has wheels in any case

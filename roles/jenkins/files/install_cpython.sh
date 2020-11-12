@@ -14,7 +14,7 @@ function install_python() {
 
 	if [[ -d /opt/python-${VERSION} ]]; then
 		echo "Version ${VERSION} is already present, not rebuilding"
-		exit
+		return
 	fi
 
 

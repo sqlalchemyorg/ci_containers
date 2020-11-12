@@ -6,11 +6,12 @@ ansible_user: classic
 # this renders a PATH, so put the Python version that will be used for
 # utilities etc. first
 cpython_versions:
-  - "3.8.0"
+  - "3.9.0"
+  - "3.8.6"
   - "2.7.17"
-  - "3.5.8"
-  - "3.6.9"
-  - "3.7.5"
+  - "3.5.10"
+  - "3.6.12"
+  - "3.7.9"
 
 force_container_rebuild: false
 
@@ -48,14 +49,16 @@ mysql_remove_versions:
 # pgdg-centos96-9.6-3.noarch.rpm
 # the "9.6-3" is the repotag
 postgresql_versions:
+  - {"version": "13", "hostname": "pg13",
+     "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17"}
   - {"version": "12", "hostname": "pg12",
-     "public_ip": "192.168.1.212", "internal_ip": "172.18.0.14", "repotag": "12-0"}
+     "public_ip": "192.168.1.212", "internal_ip": "172.18.0.14"}
   - {"version": "11", "hostname": "pg11",
-     "public_ip": "192.168.1.207", "internal_ip": "172.18.0.5", "repotag": "11-2"}
+     "public_ip": "192.168.1.207", "internal_ip": "172.18.0.5"}
   - {"version": "10", "hostname": "pg10",
-     "public_ip": "192.168.1.209", "internal_ip": "172.18.0.3", "repotag": "10-2"}
+     "public_ip": "192.168.1.209", "internal_ip": "172.18.0.3"}
   - {"version": "9.6", "hostname": "pg96",
-     "public_ip": "192.168.1.206", "internal_ip": "172.18.0.4", "repotag": "9.6-3",
+     "public_ip": "192.168.1.206", "internal_ip": "172.18.0.4",
      "lightweight": true, "openstack": true}
 
 postgresql_remove_versions:

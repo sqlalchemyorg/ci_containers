@@ -3,7 +3,7 @@ FROM centos:8
 ARG python_versions="2.7.17 3.8.0"
 
 # for glibc-langpack-en see https://github.com/CentOS/sig-cloud-instance-images/issues/71#issuecomment-538302151
-ARG packages="java openldap-devel patch xz bzip2 procps git zip unzip net-tools glibc-langpack-en"
+ARG packages="java openldap-devel patch xz bzip2 procps git zip unzip net-tools glibc-langpack-en which"
 
 # centos
 ARG build_deps="epel-release gcc gcc-c++ make cmake bzip2-devel zlib-devel openssl-devel"

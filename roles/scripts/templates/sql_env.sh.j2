@@ -11,6 +11,7 @@ fi
 # TODO: template this....
 # mysqlconnector at the moment seems to have much better support for
 # things provided we use the correct package.
+# for SQLAlchemy 1.4 we won't need to list separate drivers here.
 export TOX_MYSQL=\
 "--dburi mysql+mysqldb://scott:tiger@mariadb104/test?charset=utf8mb4 "\
 "--dburi mysql+pymysql://scott:tiger@mariadb105/test?charset=utf8mb4 "\
@@ -23,6 +24,9 @@ export TOX_MYSQL=\
 # "--dburi mysql+mysqldb://scott:tiger@mariadb102/test?charset=utf8 "\
 
 
+# note: for SQLAlchemy 1.4, extra PG drivers like asyncpg are brought in
+# using the --dbdriver in tox.ini; the driver here is not
+# important
 export TOX_POSTGRESQL=\
 "--postgresql-templatedb=ci_template "\
 "--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
@@ -30,31 +34,6 @@ export TOX_POSTGRESQL=\
 "--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg96/test "
 
-if [[ "${pyv}" == *"py2"* ]]; then
-export TOX_POSTGRESQL_W_PG8000="${TOX_POSTGRESQL}"
-
-export TOX_POSTGRESQL_MASTER="${TOX_POSTGRESQL}"
-
-else
-export TOX_POSTGRESQL_W_PG8000=\
-"--postgresql-templatedb=ci_template "\
-"--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
-"--dburi postgresql+pg8000://scott:tiger@pg12/test "\
-"--dburi postgresql+psycopg2://scott:tiger@pg11/test "\
-"--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
-"--dburi postgresql+psycopg2://scott:tiger@pg96/test "
-
-export TOX_POSTGRESQL_MASTER=\
-"--postgresql-templatedb=ci_template "\
-"--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
-"--dburi postgresql+asyncpg://scott:tiger@pg12/test?async_fallback=true "\
-"--dburi postgresql+psycopg2://scott:tiger@pg11/test "\
-"--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
-"--dburi postgresql+psycopg2://scott:tiger@pg96/test "
-
-
-
-fi
 
 export TOX_ORACLE="--dburi oracle+cx_oracle://scott:tiger@oracle1120/xe"
 
