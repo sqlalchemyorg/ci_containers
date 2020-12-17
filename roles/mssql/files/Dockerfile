@@ -21,7 +21,7 @@ ARG product_version=2017
 # this seems to be the current working one
 RUN curl https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo > /etc/yum.repos.d/mssql-server-2017.repo && \
     curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo && \
-    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools && \
+    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools mssql-server-fts && \
     yum clean all
 
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
