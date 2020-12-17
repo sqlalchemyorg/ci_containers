@@ -13,17 +13,17 @@ RUN \
 	yum install -y /usr/local/src/oracle/Disk1/oracle-xe-${product_version}-1.0.x86_64.rpm && \
 	cd .. && rm -fr oracle
 
-COPY ./oracle_setup.sh /
-COPY ./oracle_entrypoint.sh /
-COPY ./oracle_responsefile.txt /
-COPY ./oracle_setup.sql /
+COPY ./oracle_setup.11.sh /
+COPY ./oracle_entrypoint.11.sh /
+COPY ./oracle_responsefile.11.txt /
+COPY ./oracle_setup.11.sql /
 COPY ./functions /etc/init.d/functions
 
 RUN \
-	chmod 755 /oracle_setup.sh /oracle_entrypoint.sh && \
-	/oracle_setup.sh
+	chmod 755 /oracle_setup.11.sh /oracle_entrypoint.11.sh && \
+	/oracle_setup.11.sh
 
 EXPOSE 8085/tcp
 EXPOSE 1521/tcp
 
-ENTRYPOINT ["/oracle_entrypoint.sh"]
+ENTRYPOINT ["/oracle_entrypoint.11.sh"]

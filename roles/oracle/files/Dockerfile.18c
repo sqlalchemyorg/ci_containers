@@ -1,0 +1,29 @@
+FROM centos:7
+
+ARG product_version=18c
+
+WORKDIR /opt
+
+RUN \
+	mkdir /usr/local/src/oracle && \
+	cd /usr/local/src/oracle && \
+	curl -L -O https://jenkins.sqlalchemy.org/downloads/oracle-database-preinstall-${product_version}-1.0-1.el7.x86_64.rpm && \
+	curl -L -O https://jenkins.sqlalchemy.org/downloads/oracle-database-xe-${product_version}-1.0-1.x86_64.rpm && \
+	yum install -y /usr/local/src/oracle/oracle-database-preinstall-${product_version}-1.0-1.el7.x86_64.rpm && \
+	ORACLE_DOCKER_INSTALL=true yum install -y /usr/local/src/oracle/oracle-database-xe-${product_version}-1.0-1.x86_64.rpm && \
+	cd .. && rm -fr oracle
+
+COPY ./oracle_setup.18c.sh /
+COPY ./oracle_env.18c.sh /
+COPY ./oracle_entrypoint.18c.sh /
+COPY ./oracle_setup.18c.sql /
+COPY ./functions /etc/init.d/functions
+
+RUN \
+	chmod 755 /oracle_setup.18c.sh /oracle_entrypoint.18c.sh && \
+	/oracle_setup.18c.sh
+
+EXPOSE 8085/tcp
+EXPOSE 1521/tcp
+
+ENTRYPOINT ["/oracle_entrypoint.18c.sh"]

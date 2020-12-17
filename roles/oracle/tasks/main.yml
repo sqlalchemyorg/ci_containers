@@ -8,13 +8,18 @@
     src: "{{ item }}"
     dest: /usr/local/dockerbuilds/oracle/
   with_items:
-    - "Dockerfile"
+    - "Dockerfile.11"
+    - "Dockerfile.18c"
     - "functions"
     - "README.txt"
-    - "oracle_responsefile.txt"
-    - "oracle_setup.sh"
-    - "oracle_setup.sql"
-    - "oracle_entrypoint.sh"
+    - "oracle_setup.11.sh"
+    - "oracle_responsefile.11.txt"
+    - "oracle_entrypoint.11.sh"
+    - "oracle_setup.11.sql"
+    - "oracle_entrypoint.18c.sh"
+    - "oracle_setup.18c.sh"
+    - "oracle_env.18c.sh"
+    - "oracle_setup.18c.sql"
 
 - name: create selinux policy
   script: create_selinux_module.sh
@@ -23,11 +28,16 @@
 - name: "build images"
   docker_image:
     name: "oracle_{{ item['version'] }}"
-    path: "/usr/local/dockerbuilds/oracle"
-    force: "{{ force_container_rebuild|bool }}"
-    pull: yes
-    buildargs:
-      product_version: "{{ item['version'] }}"
+    force_source: "{{ force_container_rebuild|bool }}"
+    source: "build"
+    state: "present"
+    build:
+      path: "/usr/local/dockerbuilds/oracle"
+      pull: yes
+      dockerfile: "Dockerfile.{{ item['version_prefix']}}"
+      args:
+        product_version: "{{ item['version'] }}"
+
   with_items: "{{ oracle_versions }}"
 
 - name: setup external network

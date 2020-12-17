@@ -25,18 +25,19 @@ for file in "${INIT_ORA}" "${INIT_ORAXE}"; do
 	sed -e '/memory_target/ i sga_target=610620480' -i ${file}
 done
 
-
-# Backup listener.ora as template
+# before running oracle setup, get their listener/tnsnames templates.
+# copy them out.   we will use them each time a new container starts
+# and swap the hostname in.
 cp ${LISTENER} ${LISTENER}.tmpl
 cp ${TNSNAMES} ${TNSNAMES}.tmpl
 
 
-/etc/init.d/oracle-xe configure responseFile=${HERE}/oracle_responsefile.txt
+/etc/init.d/oracle-xe configure responseFile=${HERE}/oracle_responsefile.11.txt
 
 ln -s  /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh /etc/profile.d/oracle_env.sh
 echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${ORACLE_HOME}/lib" >> /etc/profile.d/oracle_env.sh
 
 source /etc/profile.d/oracle_env.sh
-${ORACLE_HOME}/bin/sqlplus -s /nolog @/oracle_setup.sql
+${ORACLE_HOME}/bin/sqlplus -s /nolog @/oracle_setup.11.sql
 
 
