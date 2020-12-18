@@ -1,7 +1,7 @@
 
 [local]
 dell jenkins_secret="{{ dell_secret }}" jenkins_slave_name="dell" add_public_network=true
-d2 jenkins_secret="{{ d2_secret }}" jenkins_slave_name="d2"
+#d2 jenkins_secret="{{ d2_secret }}" jenkins_slave_name="d2"
 d3 jenkins_secret="{{ d3_secret }}" jenkins_slave_name="d3"
 
 

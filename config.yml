@@ -69,9 +69,9 @@ mssql_versions:
      "public_ip": "192.168.1.208", "internal_ip": "172.18.0.10", }
 
 oracle_versions:
-#  - {"version": "11.2.0", "hostname": "oracle1120",
-#     "public_ip": "192.168.1.205", "internal_ip": "172.18.0.2",
-#     "version_prefix": "11"}
+  - {"version": "11.2.0", "hostname": "oracle1120",
+     "public_ip": "192.168.1.205", "internal_ip": "172.18.0.2",
+     "version_prefix": "11"}
   - {"version": "18c", "hostname": "oracle18c",
      "public_ip": "192.168.1.216", "internal_ip": "172.18.0.18",
      "version_prefix": "18c"}

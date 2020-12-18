@@ -35,7 +35,9 @@ export TOX_POSTGRESQL=\
 "--dburi postgresql+psycopg2://scott:tiger@pg96/test "
 
 
-export TOX_ORACLE="--dburi oracle+cx_oracle://scott:tiger@oracle1120/xe"
+export TOX_ORACLE=\
+"--dburi oracle+cx_oracle://scott:tiger@oracle1120/xe "\
+"--dburi oracle+cx_oracle://scott:tiger@oracle18c/xe "
 
 # the ODBC url needs to be fully qualified so that the
 # process runner can create new database URLs
