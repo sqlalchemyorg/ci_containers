@@ -29,6 +29,7 @@ export TOX_MYSQL=\
 # important
 export TOX_POSTGRESQL=\
 "--postgresql-templatedb=ci_template "\
+"--dburi postgresql+psycopg2://scott:tiger@pg13/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg11/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
