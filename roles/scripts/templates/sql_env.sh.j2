@@ -20,6 +20,13 @@ export TOX_MYSQL=\
 "--dburi mysql+mysqldb://scott:tiger@mysql80/test?charset=utf8mb4 "\
 "--dburi mysql+pymysql://scott:tiger@mysql80/test?charset=utf8mb4 "
 
+export TOX_MYSQL_PY2K=\
+"--dburi mysql+pymysql://scott:tiger@mariadb105/test?charset=utf8mb4 "\
+"--dburi mysql+pymysql://scott:tiger@mysql57/test?charset=utf8mb4 "\
+"--dburi mysql+mysqldb://scott:tiger@mysql56/test?charset=utf8mb4 "\
+"--dburi mysql+pymysql://scott:tiger@mysql80/test?charset=utf8mb4 "
+
+
 
 # "--dburi mysql+mysqldb://scott:tiger@mariadb102/test?charset=utf8 "\
 
@@ -33,6 +40,11 @@ export TOX_POSTGRESQL=\
 "--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg11/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg10/test "\
+"--dburi postgresql+psycopg2://scott:tiger@pg96/test "
+
+export TOX_POSTGRESQL_PY2K=\
+"--postgresql-templatedb=ci_template "\
+"--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg96/test "
 
 
