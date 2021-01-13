@@ -72,7 +72,11 @@ setup ()
 
     export UPPER_CONSTRAINTS_FILE=${WORKSPACE}/upper_constraints.txt
     export SPECIAL_REQUIREMENTS_FILE=${WORKSPACE}/special_requirements.txt
-    export TOX_TESTENV_PASSENV="UPPER_CONSTRAINTS_FILE ${TOX_TESTENV_PASSENV}"
+    export TOX_TESTENV_PASSENV="UPPER_CONSTRAINTS_FILE VIRTUALENV_PIP ${TOX_TESTENV_PASSENV}"
+
+    # wait for https://github.com/pypa/pip/issues/9446
+    # to be resolved before removing
+    export VIRTUALENV_PIP=19.3.1
 
     curl --retry 3 "$UPPER_CONSTRAINTS" -L --insecure --progress-bar --output ${UPPER_CONSTRAINTS_FILE}
 
@@ -304,6 +308,8 @@ run_project ()
 
     sed -i.tmp "s#-r{toxinidir}/requirements.txt#-r{toxinidir}/requirements.txt\n      -r${SPECIAL_REQUIREMENTS_FILE}#" tox.ini
 
+    sed  -i.tmp '/testenv]$/a download = True' tox.ini
+
     for keyword in SQLAlchemy alembic dogpile.cache oslo.db oslo.cache sqlalchemy-migrate greenlet ; do
         sed -i.tmp "s/^${keyword}.*//" requirements.txt
     done
@@ -350,30 +356,30 @@ run_projects() {
         if [ "${proj}" = "oslo.db" ]; then
             prepare_openstack_project oslo.db
             OS_TEST_TIMEOUT=0
-            run_project oslo.db py37
-            gen_junit_results oslo.db py37
+            run_project oslo.db py3
+            gen_junit_results oslo.db py3
             handle_exit
 
         elif [ "${proj}" = "keystone" ]; then
             prepare_openstack_project keystone
             OS_TEST_TIMEOUT=600
-            find ${WORKSPACE}/keystone/keystone/tests/ -path "*/tmp/*" -type d -exec rm -fr {} \;
-            run_project keystone py37 'keystone.tests.unit.*sql.*'
-            gen_junit_results keystone py37
+            find ${WORKSPACE}/keystone/keystone/tests/ -name tmp -type d -exec rm -fr {} \;
+            run_project keystone py3 'keystone.tests.unit.*sql.*'
+            gen_junit_results keystone py3
             handle_exit
 
         elif [ "${proj}" = "nova" ]; then
             prepare_openstack_project nova
             OS_TEST_TIMEOUT=400
-            run_project nova py37 'nova.tests.unit.db'
-            gen_junit_results nova py37
+            run_project nova py3 'nova.tests.unit.db'
+            gen_junit_results nova py3
             handle_exit
 
         elif [ "${proj}" = "neutron" ]; then
             prepare_openstack_project neutron
             OS_TEST_TIMEOUT=0
-            run_project neutron py37 ".*\.unit\.db\."
-            gen_junit_results neutron py37 unit
+            run_project neutron py3 ".*\.unit\.db\."
+            gen_junit_results neutron py3 unit
             handle_exit
 
             # NOTE: the "functional" suite sets the test path to
