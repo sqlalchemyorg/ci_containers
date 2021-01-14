@@ -71,12 +71,13 @@ setup ()
     fi
 
     export UPPER_CONSTRAINTS_FILE=${WORKSPACE}/upper_constraints.txt
+    export TOX_CONSTRAINTS_FILE=${WORKSPACE}/upper_constraints.txt
     export SPECIAL_REQUIREMENTS_FILE=${WORKSPACE}/special_requirements.txt
-    export TOX_TESTENV_PASSENV="UPPER_CONSTRAINTS_FILE VIRTUALENV_PIP ${TOX_TESTENV_PASSENV}"
+    export TOX_TESTENV_PASSENV="TOX_CONSTRAINTS_FILE UPPER_CONSTRAINTS_FILE VIRTUALENV_PIP ${TOX_TESTENV_PASSENV}"
 
     # wait for https://github.com/pypa/pip/issues/9446
     # to be resolved before removing
-    export VIRTUALENV_PIP=19.3.1
+    export VIRTUALENV_PIP=20.2
 
     curl --retry 3 "$UPPER_CONSTRAINTS" -L --insecure --progress-bar --output ${UPPER_CONSTRAINTS_FILE}
 
