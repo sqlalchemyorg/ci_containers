@@ -304,6 +304,10 @@ run_project ()
     # most openstacks wont honor this...
     export TOX_TESTENV_PASSENV="OS_TEST_TIMEOUT ${TOX_TESTENV_PASSENV}"
 
+    if [ -f tox.ini.tmp ]; then
+        mv tox.ini.tmp tox.ini
+    fi
+
     # manually change the file for now
     sed -i.tmp "s/OS_TEST_TIMEOUT=.*/OS_TEST_TIMEOUT=${OS_TEST_TIMEOUT}/" tox.ini
 
