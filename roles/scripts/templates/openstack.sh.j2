@@ -13,6 +13,8 @@ UPPER_CONSTRAINTS=https://git.openstack.org/cgit/openstack/requirements/plain/up
 
 PATCHES=${SCRIPT_BASE}/openstack_patches
 
+PROJECTS_WE_CONTROL="SQLAlchemy alembic dogpile.cache oslo.db oslo.cache sqlalchemy-migrate greenlet"
+
 # may be useful for reference
 # https://git.openstack.org/cgit/openstack/requirements/plain/global-requirements.txt
 
@@ -77,13 +79,13 @@ setup ()
 
     # wait for https://github.com/pypa/pip/issues/9446
     # to be resolved before removing
-    export VIRTUALENV_PIP=20.2
+    export VIRTUALENV_PIP=20.2.4
 
     curl --retry 3 "$UPPER_CONSTRAINTS" -L --insecure --progress-bar --output ${UPPER_CONSTRAINTS_FILE}
 
     cat /dev/null > ${SPECIAL_REQUIREMENTS_FILE}
 
-    for keyword in SQLAlchemy alembic dogpile.cache oslo.db oslo.cache sqlalchemy-migrate greenlet; do
+    for keyword in $PROJECTS_WE_CONTROL ; do
         sed -i.tmp "s/^${keyword}.*//" ${UPPER_CONSTRAINTS_FILE};
     done
 
@@ -98,6 +100,8 @@ upstream_deps() {
 
     if [[ "${GERRIT_PROJECT}" == "sqlalchemy/sqlalchemy" ]]; then
         prepare_gerrit_dependency SQLAlchemy sqlalchemy
+    elif [[ "${GERRIT_PROJECT}" == "sqlalchemy/alembic" ]]; then
+        prepare_current_release_dependency SQLAlchemy sqlalchemy
     else
         prepare_github_dependency SQLAlchemy sqlalchemy ${SQLALCHEMY_TAG}
     fi
@@ -131,6 +135,14 @@ prepare_github_dependency ()
     echo "git+${GITHUB_GIT_BASE}${GIT_NAME}.git@${VERSION}#egg=${PACKAGE}" >> ${SPECIAL_REQUIREMENTS_FILE}
 }
 
+prepare_current_release_dependency ()
+{
+
+    PACKAGE=$1
+    GIT_NAME=$2
+
+    echo "${PACKAGE}" >> ${SPECIAL_REQUIREMENTS_FILE}
+}
 
 prepare_sqlalchemy_migrate()
 {
@@ -197,7 +209,7 @@ prepare_repaired_oslo_db()
     fi
 
 
-    echo "git+file://${WORKSPACE}/${GIT_NAME}@master#egg=${PACKAGE}" >> ${SPECIAL_REQUIREMENTS_FILE}
+    echo "git+file://${WORKSPACE}/${GIT_NAME}@master#egg=${PACKAGE}[fixtures,mysql,postgresql]" >> ${SPECIAL_REQUIREMENTS_FILE}
 
 }
 
@@ -279,6 +291,7 @@ prepare_openstack_project ()
         git reset --hard
         git remote set-url origin ${OPENSTACK_GIT_BASE}${PROJECT}.git
         git pull origin master
+        rm -f tox.ini.tmp
     else
         git clone ${OPENSTACK_GIT_BASE}${PROJECT}.git
         cd ${PROJECT}
@@ -315,8 +328,9 @@ run_project ()
 
     sed  -i.tmp '/testenv]$/a download = True' tox.ini
 
-    for keyword in SQLAlchemy alembic dogpile.cache oslo.db oslo.cache sqlalchemy-migrate greenlet ; do
+    for keyword in $PROJECTS_WE_CONTROL ; do
         sed -i.tmp "s/^${keyword}.*//" requirements.txt
+        sed -i.tmp "s/^${keyword}.*//" test-requirements.txt
     done
 
     # we need the -r here at the very least to ensure we get the
