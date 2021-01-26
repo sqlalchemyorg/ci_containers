@@ -1,8 +1,0 @@
-git+https://github.com/oracle/python-cx_Oracle.git@master#egg=cx_Oracle
-git+https://github.com/psycopg/psycopg2.git@master#egg=psycopg2
-git+https://github.com/PyMySQL/mysqlclient-python.git@master#egg=mysqlclient
-git+https://github.com/PyMySQL/PyMySQL.git@master#egg=pymysql
-git+https://github.com/mkleehammer/pyodbc.git@master#egg=pyodbc
-git+https://github.com/tlocke/pg8000.git#egg=pg8000
-git+https://github.com/MagicStack/asyncpg.git#egg=asyncpg
-#git+https://github.com/pymssql/pymssql.git@stable-2.1.x#egg=pymssql
