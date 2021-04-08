@@ -19,6 +19,7 @@ d3
 
 [public_facing]
 ci2.zzzcomputing.com ansible_host=45.33.78.28 ansible_user=classic ansible_ssh_user=classic ansible_ssh_port=2245
+ci3.zzzcomputing.com ansible_host=45.79.163.59 ansible_user=classic ansible_ssh_user=classic ansible_ssh_port=2245
 
 
 

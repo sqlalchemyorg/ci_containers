@@ -30,7 +30,6 @@
   with_items:
     - categorize_gerrit_changes.sh
     - alembic_on_sqla.sh
-    - dbapi_master_gits.txt
 
 - name: copy environment template files
   template:
