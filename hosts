@@ -6,7 +6,7 @@ d3 jenkins_secret="{{ d3_secret }}" jenkins_slave_name="d3"
 
 
 [cloud]
-do1 ansible_host=157.230.92.94  ansible_ssh_user=root
+do1 ansible_host=143.198.125.4  ansible_ssh_user=root
 
 [fast]
 dell

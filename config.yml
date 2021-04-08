@@ -6,7 +6,7 @@ ansible_user: classic
 # this renders a PATH, so put the Python version that will be used for
 # utilities etc. first
 cpython_versions:
-  - "3.9.0"
+  - "3.9.4"
   - "3.8.6"
   - "2.7.17"
   - "3.5.10"
