@@ -195,7 +195,7 @@ prepare_repaired_oslo_db()
     git pull
 
     if [ -d "${PATCHES}" ]; then
-        for patchfile in `ls ${PATCHES}/oslo.db_*.patch`
+        for patchfile in `find ${PATCHES} -name "oslo.db_*.patch"`
         do
             patch -f -p1 < ${patchfile} || true
         done
@@ -205,7 +205,7 @@ prepare_repaired_oslo_db()
         git config user.email "jenkins@sqlalchemy.org"
         git config user.name "Jenkins SQLAlchemy"
 
-        git commit -m "apply oslo.db patches" oslo_db
+        git commit --allow-empty -m "apply oslo.db patches" oslo_db
     fi
 
 
@@ -298,7 +298,7 @@ prepare_openstack_project ()
     fi
 
     if [ -d "${PATCHES}" ]; then
-        for patchfile in `ls ${PATCHES}/${PROJECT}_*.patch`
+        for patchfile in `find ${PATCHES} -name "${PROJECT}_*.patch"`
         do
             patch -f -p1 < ${patchfile} || true
         done
