@@ -165,7 +165,7 @@ prepare_sqlalchemy_migrate()
     git config user.name "Jenkins SQLAlchemy"
 
     if [ -d "${PATCHES}" ]; then
-        for patchfile in `ls ${PATCHES}/${PACKAGE}_*.patch`
+        for patchfile in `find ${PATCHES} -name "${PACKAGE}_*.patch"`
         do
             patch -f -p1 < ${patchfile} || true
         done
