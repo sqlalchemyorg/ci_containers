@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH="{% for item in cpython_versions %}/opt/python-{{ item }}/bin/:{% endfor %}${PATH}"
+export PATH="{% for item in cpython_short_versions %}/opt/python{{ item }}/bin/:{% endfor %}${PATH}"
 
 export LD_LIBRARY_PATH="/opt/sqlite3/lib:${LD_LIBRARY_PATH}"
 

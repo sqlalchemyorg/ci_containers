@@ -13,6 +13,14 @@ cpython_versions:
   - "3.6.12"
   - "3.7.9"
 
+cpython_short_versions:
+  - "3.9"
+  - "3.8"
+  - "2.7"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+
 force_container_rebuild: false
 
 # NOTE: hostnames are also used as label strings
