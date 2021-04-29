@@ -19,6 +19,8 @@ ALTER SYSTEM SET COMMON_USER_PREFIX='' scope=SPFILE;
 SHUTDOWN IMMEDIATE;
 STARTUP;
 
+-- https://dbaclass.com/article/ora-04036-pga-memory-used-by-the-instance-exceeds-pga_aggregate_limit/
+alter system set pga_aggregate_limit=0 scope=both;
 ALTER PROFILE DEFAULT LIMIT  FAILED_LOGIN_ATTEMPTS UNLIMITED PASSWORD_LIFE_TIME UNLIMITED;
 NOAUDIT ALL;
 DELETE FROM SYS.AUD$;
