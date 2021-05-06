@@ -1,0 +1,20 @@
+diff --git a/keystone/common/sql/core.py b/keystone/common/sql/core.py
+index ed84e5893..d75690482 100644
+--- a/keystone/common/sql/core.py
++++ b/keystone/common/sql/core.py
+@@ -119,6 +119,7 @@ ModelBase.__init__ = initialize_decorator(ModelBase.__init__)
+ class JsonBlob(sql_types.TypeDecorator):
+ 
+     impl = sql.Text
++    cache_ok = True
+ 
+     def process_bind_param(self, value, dialect):
+         return jsonutils.dumps(value)
+@@ -144,6 +145,7 @@ class DateTimeInt(sql_types.TypeDecorator):
+ 
+     impl = sql.BigInteger
+     epoch = datetime.datetime.fromtimestamp(0, tz=pytz.UTC)
++    cache_ok = True
+ 
+     def process_bind_param(self, value, dialect):
+         if value is None:
