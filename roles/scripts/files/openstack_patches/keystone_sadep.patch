@@ -1,0 +1,12 @@
+diff --git a/keystone/tests/unit/core.py b/keystone/tests/unit/core.py
+index 918a87253..6e9d5030f 100644
+--- a/keystone/tests/unit/core.py
++++ b/keystone/tests/unit/core.py
+@@ -684,6 +684,7 @@ class BaseTestCase(testtools.TestCase):
+         warnings.filterwarnings(
+             'ignore', category=DeprecationWarning,
+             message=r"Using function/method 'db_version\(\)' is deprecated")
++        warnings.simplefilter('ignore', exc.SADeprecationWarning)
+         warnings.simplefilter('error', exc.SAWarning)
+         if hasattr(exc, "RemovedIn20Warning"):
+             warnings.simplefilter('ignore', exc.RemovedIn20Warning)
