@@ -30,6 +30,8 @@ RUN yum install -y ${python_interp_build_deps}
 
 RUN curl -L -O https://bootstrap.pypa.io/get-pip.py
 
+RUN curl -L https://bootstrap.pypa.io/pip/2.7/get-pip.py > get-pip-27.py
+
 COPY install_cpython.sh /usr/local/src/install_cpython.sh
 
 RUN chmod 0755 /usr/local/src/install_cpython.sh && \
