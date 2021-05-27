@@ -34,11 +34,13 @@
 - name: build images
   docker_image:
     name: "{{ item['type'] }}_{{ item['version'] }}"
-    path: "/usr/local/dockerbuilds/{{ item['type'] }}"
-    force: "{{ force_container_rebuild|bool }}"
-    pull: yes
-    buildargs:
-      product_version: "{{ item['version'] }}"
+    build:
+      path: "/usr/local/dockerbuilds/{{ item['type'] }}"
+      pull: yes
+      args:
+        product_version: "{{ item['version'] }}"
+    source: build
+    force_source: "{{ force_container_rebuild|bool }}"
   with_items: "{{ mysql_versions }}"
 
 - name: setup external network
