@@ -87,6 +87,12 @@
     dest: /usr/local/src
     mode: '0775'
 
+- name: get pip 2.7
+  get_url:
+    url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+    dest: /usr/local/src/get-pip-27.py
+    mode: '0775'
+
 - name: run python install thing
   shell: |
     /usr/local/src/install_cpython.sh "{{ cpython_versions | join(' ') }}"
