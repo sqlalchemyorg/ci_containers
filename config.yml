@@ -6,12 +6,12 @@ ansible_user: classic
 # this renders a PATH, so put the Python version that will be used for
 # utilities etc. first
 cpython_versions:
-  - "3.9.4"
-  - "3.8.6"
+  - "3.9.7"
+  - "3.8.12"
   - "2.7.17"
-  - "3.6.12"
-  - "3.7.9"
-  - "3.10.0b1"
+  - "3.6.15"
+  - "3.7.11"
+  - "3.10.0rc2"
 
 cpython_short_versions:
   - "3.10"
@@ -33,23 +33,35 @@ mysql_versions:
      "public_ip": "192.168.1.201", "internal_ip": "172.18.0.6", "type": "mysql"}
   - {"version": "5.6", "hostname": "mysql56",
      "public_ip": "192.168.1.202", "internal_ip": "172.18.0.7", "type": "mysql", "lightweight": true}
-  - {"version": "10.5.1", "hostname": "mariadb105",
+  - {"version": "10.6.4", "hostname": "mariadb106",
+     "public_ip": "192.168.1.204", "internal_ip": "172.18.0.9", "type": "mariadb"}
+  - {"version": "10.5.12", "hostname": "mariadb105",
      "public_ip": "192.168.1.213", "internal_ip": "172.18.0.16", "type": "mariadb"}
-  - {"version": "10.4.12", "hostname": "mariadb104",
+  - {"version": "10.4.21", "hostname": "mariadb104",
      "public_ip": "192.168.1.214", "internal_ip": "172.18.0.15", "type": "mariadb",
      "lightweight": true, "openstack": true}
   - {"version": "8.0", "hostname": "mysql80",
      "public_ip": "192.168.1.210", "internal_ip": "172.18.0.11", "type": "mysql"}
 
+# any version numbers that change in place have to be added to the remove
+# versions because the image name and container name will be different,
+# such as 10.5.1 -> 10.5.12.  ideally mysql containers wouldnt have minor
+# version in container / image name but that's how it is right now.
+# postgresql doesnt have this problem.
 mysql_remove_versions:
-  - {"version": "10.1.24", "hostname": "mariadb101",
-     "public_ip": "192.168.1.204", "internal_ip": "172.18.0.9", "type": "mariadb",
+  - {"version": "10.5.1", "hostname": "mariadb105",
+     "public_ip": "192.168.1.213", "internal_ip": "172.18.0.16", "type": "mariadb"}
+  - {"version": "10.4.12", "hostname": "mariadb104",
+     "public_ip": "192.168.1.214", "internal_ip": "172.18.0.15", "type": "mariadb",
      "lightweight": true, "openstack": true}
-  - {"version": "10.2.9", "hostname": "mariadb102",
-     "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8", "type": "mariadb",
-     "lightweight": true, "openstack": true}
-  - {"version": "10.3.9", "hostname": "mariadb103",
-     "public_ip": "192.168.1.211", "internal_ip": "172.18.0.12", "type": "mariadb"}
+#  - {"version": "10.1.24", "hostname": "mariadb101",
+#     "public_ip": "192.168.1.204", "internal_ip": "172.18.0.9", "type": "mariadb",
+#     "lightweight": true, "openstack": true}
+#  - {"version": "10.2.9", "hostname": "mariadb102",
+#     "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8", "type": "mariadb",
+#     "lightweight": true, "openstack": true}
+#  - {"version": "10.3.9", "hostname": "mariadb103",
+#     "public_ip": "192.168.1.211", "internal_ip": "172.18.0.12", "type": "mariadb"}
 
 # repotag:
 # go to https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/
@@ -57,6 +69,8 @@ mysql_remove_versions:
 # pgdg-centos96-9.6-3.noarch.rpm
 # the "9.6-3" is the repotag
 postgresql_versions:
+  - {"version": "14", "hostname": "pg14",
+     "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8"}
   - {"version": "13", "hostname": "pg13",
      "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17"}
   - {"version": "12", "hostname": "pg12",
@@ -84,7 +98,10 @@ oracle_versions:
      "public_ip": "192.168.1.216", "internal_ip": "172.18.0.18",
      "version_prefix": "18c"}
 
+# note: put only one sqlite version here for now; the "list" idea
+# is not tested yet
 sqlite_versions:
-  - "2020_3310100"
+  - "2021_3360000"
+
 
 jenkins_runner_ip: "172.18.0.13"

@@ -7,15 +7,13 @@ fi
 
 # TODO: template this....
 
-# NOTE: these URLs need to work for old SQLAlchemy versions 0.9, 1.0 for
-# alembic unit tests, so mysql80 is out.
 export TOX_MYSQL=\
-"--dburi mysql+pymysql://scott:tiger@mariadb104/test?charset=utf8mb4 "\
+"--dburi mysql+pymysql://scott:tiger@mariadb106/test?charset=utf8mb4 "\
 "--dburi mysql+mysqldb://scott:tiger@mysql57/test?charset=utf8mb4 "
 
 export TOX_POSTGRESQL=\
 "--postgresql-templatedb=ci_template "\
-"--dburi postgresql+psycopg2://scott:tiger@pg96/test "
+"--dburi postgresql+psycopg2://scott:tiger@pg13/test "
 
 export TOX_ORACLE="--dburi oracle+cx_oracle://scott:tiger@oracle18c/xe"
 

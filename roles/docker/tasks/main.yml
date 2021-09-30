@@ -71,9 +71,9 @@
     name: dbcontainers
     driver_options:
       com.docker.network.bridge.name: docker_net
-    ipam_options:
-      subnet: '172.18.0.0/16'
-      gateway: '172.18.0.1'
+    ipam_config:
+      - subnet: '172.18.0.0/16'
+        gateway: '172.18.0.1'
 
 - name: give classic /usr/local/src
   file:

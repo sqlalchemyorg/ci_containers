@@ -13,8 +13,8 @@ fi
 # things provided we use the correct package.
 # for SQLAlchemy 1.4 we won't need to list separate drivers here.
 export TOX_MYSQL=\
-"--dburi mysql+mysqldb://scott:tiger@mariadb104/test?charset=utf8mb4 "\
-"--dburi mysql+pymysql://scott:tiger@mariadb105/test?charset=utf8mb4 "\
+"--dburi mysql+mysqldb://scott:tiger@mariadb105/test?charset=utf8mb4 "\
+"--dburi mysql+pymysql://scott:tiger@mariadb106/test?charset=utf8mb4 "\
 "--dburi mysql+pymysql://scott:tiger@mysql57/test?charset=utf8mb4 "\
 "--dburi mysql+mysqldb://scott:tiger@mysql56/test?charset=utf8mb4 "\
 "--dburi mysql+mysqldb://scott:tiger@mysql80/test?charset=utf8mb4 "\
@@ -36,6 +36,7 @@ export TOX_MYSQL_PY2K=\
 # important
 export TOX_POSTGRESQL=\
 "--postgresql-templatedb=ci_template "\
+"--dburi postgresql+psycopg2://scott:tiger@pg14/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg13/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg12/test "\
 "--dburi postgresql+psycopg2://scott:tiger@pg11/test "\

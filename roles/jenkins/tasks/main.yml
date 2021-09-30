@@ -45,6 +45,9 @@
         python_versions: "{{ cpython_versions | join(' ') }}"
     source: build
 
+# NOTE: this is now starting to fail if there's not enough swap space
+# on target (like d3) due to oracle client lib build requiring 2g swap.
+# stop oracle containers, then build this
 - name: build dbdrivers image
   docker_image:
     name: "jenkins"

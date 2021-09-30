@@ -6,7 +6,7 @@ d3 jenkins_secret="{{ d3_secret }}" jenkins_slave_name="d3"
 
 
 [cloud]
-do1 ansible_host=159.65.234.243  ansible_ssh_user=root
+do1 ansible_host=67.207.95.145  ansible_ssh_user=root
 
 [fast]
 dell
@@ -18,7 +18,6 @@ dell
 d3
 
 [public_facing]
-ci2.zzzcomputing.com ansible_host=45.33.78.28 ansible_user=classic ansible_ssh_user=classic ansible_ssh_port=2245
 ci3.zzzcomputing.com ansible_host=45.79.163.59 ansible_user=classic ansible_ssh_user=classic ansible_ssh_port=2245
 
 

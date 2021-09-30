@@ -47,10 +47,9 @@
     - sql_env.sh
     - sql_env_lite.sh
 
-
+# note: synchronize is unusable now with ansible
 - name: synchronize openstack patches
-  synchronize:
-    src: openstack_patches/
-    dest: /usr/local/jenkins/scripts/openstack_patches/
-    delete: yes
-    recursive: yes
+  shell: |
+    rsync -v -e ssh {{ role_path }}/files/openstack_patches/* {{ansible_ssh_user}}@{{ inventory_hostname }}:/usr/local/jenkins/scripts/openstack_patches/
+  delegate_to: 127.0.0.1
+  become: no

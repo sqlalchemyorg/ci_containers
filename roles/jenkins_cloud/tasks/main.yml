@@ -93,6 +93,10 @@
     dest: /usr/local/src/get-pip-27.py
     mode: '0775'
 
+- name: lazily copy scripts from docker - sqlite
+  shell: |
+      /usr/local/src/install_sqlite.sh "{{ sqlite_versions | join(' ') }}"
+
 - name: run python install thing
   shell: |
     /usr/local/src/install_cpython.sh "{{ cpython_versions | join(' ') }}"
@@ -141,9 +145,6 @@
     cd .. && rm -fr oracle
   when: false
 
-- name: lazily copy scripts from docker - sqlite
-  shell: |
-      /usr/local/src/install_sqlite.sh "{{ sqlite_versions | join(' ') }}"
 
 
 - name: lazily copy scripts from docker - SQL server
