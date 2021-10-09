@@ -50,7 +50,7 @@ prerequisites ()
     PYTHON_BIN_DIR=`dirname $PYTHON_INTERP`
 
     if [[ ! $SQLALCHEMY_TAG ]]; then
-        SQLALCHEMY_TAG=master
+        SQLALCHEMY_TAG="main"
     fi
 
     if [[ ! $TOX ]]; then
@@ -109,13 +109,13 @@ upstream_deps() {
     if [[ "${GERRIT_PROJECT}" == "sqlalchemy/alembic" ]]; then
         prepare_gerrit_dependency alembic alembic
     else
-        prepare_github_dependency alembic alembic master
+        prepare_github_dependency alembic alembic main
     fi
 
     if [[ "${GERRIT_PROJECT}" == "sqlalchemy/dogpile.cache" ]]; then
         prepare_gerrit_dependency dogpile.cache dogpile.cache
     else
-        prepare_github_dependency dogpile.cache dogpile.cache master
+        prepare_github_dependency dogpile.cache dogpile.cache main
     fi
 
     prepare_repaired_oslo_cache
@@ -131,6 +131,19 @@ prepare_github_dependency ()
     PACKAGE=$1
     GIT_NAME=$2
     VERSION=$3
+
+    pushd ${WORKSPACE}
+
+    if [[ "${VERSION}" == "main" ]]; then
+        if [[ ! -d ${GIT_NAME} ]]; then
+            git clone ${GITHUB_GIT_BASE}${GIT_NAME}
+        fi
+        pushd ${GIT_NAME}
+        VERSION=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+        popd
+    fi
+
+    popd
 
     echo "git+${GITHUB_GIT_BASE}${GIT_NAME}.git@${VERSION}#egg=${PACKAGE}" >> ${SPECIAL_REQUIREMENTS_FILE}
 }
@@ -156,7 +169,8 @@ prepare_sqlalchemy_migrate()
     fi
     cd ${GIT_NAME}
     git remote set-url origin ${X_GIT_BASE}sqlalchemy-migrate
-    git reset --hard origin/master
+    MAIN=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+    git reset --hard origin/${MAIN}
     git pull
 
     # has to be a git install.  so we have to commit the file.  whatevs.
@@ -175,7 +189,7 @@ prepare_sqlalchemy_migrate()
     fi
 
 
-    echo "git+file://${WORKSPACE}/${GIT_NAME}@master#egg=${PACKAGE}" >> ${SPECIAL_REQUIREMENTS_FILE}
+    echo "git+file://${WORKSPACE}/${GIT_NAME}@${MAIN}#egg=${PACKAGE}" >> ${SPECIAL_REQUIREMENTS_FILE}
 
 }
 
@@ -191,7 +205,8 @@ prepare_repaired_oslo_db()
     fi
     cd ${GIT_NAME}
     git remote set-url origin ${OPENSTACK_GIT_BASE}oslo.db
-    git reset --hard origin/master
+    MAIN=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+    git reset --hard origin/${MAIN}
     git pull
 
     if [ -d "${PATCHES}" ]; then
@@ -209,7 +224,7 @@ prepare_repaired_oslo_db()
     fi
 
 
-    echo "git+file://${WORKSPACE}/${GIT_NAME}@master#egg=${PACKAGE}[fixtures,mysql,postgresql]" >> ${SPECIAL_REQUIREMENTS_FILE}
+    echo "git+file://${WORKSPACE}/${GIT_NAME}@${MAIN}#egg=${PACKAGE}[fixtures,mysql,postgresql]" >> ${SPECIAL_REQUIREMENTS_FILE}
 
 }
 
@@ -224,8 +239,12 @@ prepare_repaired_oslo_cache()
         git clone ${OPENSTACK_GIT_BASE}oslo.cache
     fi
     cd ${GIT_NAME}
+
+    MAIN=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+
     git remote set-url origin ${OPENSTACK_GIT_BASE}oslo.cache
-    git reset --hard origin/master
+    MAIN=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+    git reset --hard origin/${MAIN}
     git pull
     sed -i.tmp "s/^dogpile.cache.*/dogpile.cache/" requirements.txt
 
@@ -236,7 +255,7 @@ prepare_repaired_oslo_cache()
 
     git commit -m "unblock dogpile.cache" requirements.txt
 
-    echo "git+file://${WORKSPACE}/${GIT_NAME}@master#egg=${PACKAGE}" >> ${SPECIAL_REQUIREMENTS_FILE}
+    echo "git+file://${WORKSPACE}/${GIT_NAME}@${MAIN}#egg=${PACKAGE}" >> ${SPECIAL_REQUIREMENTS_FILE}
 
 }
 
@@ -288,9 +307,11 @@ prepare_openstack_project ()
     PROJECT=$1
     if [[ -d ${PROJECT} ]]; then
         cd ${PROJECT}
+
         git reset --hard
         git remote set-url origin ${OPENSTACK_GIT_BASE}${PROJECT}.git
-        git pull origin master
+        MAIN=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+        git pull origin ${MAIN}
         rm -f tox.ini.tmp
     else
         git clone ${OPENSTACK_GIT_BASE}${PROJECT}.git
