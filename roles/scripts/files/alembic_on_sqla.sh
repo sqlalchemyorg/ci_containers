@@ -7,8 +7,7 @@ source /usr/local/jenkins/scripts/sql_env.sh
 
 # we want to run on light weight instances so
 # don't include oracle for the moment
-TARGETS="sqlamaster-sqlite-postgresql-mysql"
-#TARGETS="sqlamaster-sqlite"
+TARGETS="sqlamain-sqlite-postgresql-mysql"
 
 
 HERE=`pwd`
@@ -32,6 +31,6 @@ BASENAME=$(basename ${HERE})
 
 ln -s ${HERE} ${tmp_dir}/${BASENAME}
 
-sed -i.tmp "s#^\( *\)sqlamaster: .*#\1sqlamaster: git+file://${tmp_dir}/${BASENAME}#" tox.ini;
-tox -r -e ${pyv}-${TARGETS} -- --junitxml=junit-${pyv}-sqlamaster.xml
+sed -i.tmp "s#^\( *\)sqlamain: .*#\1sqlamain: git+file://${tmp_dir}/${BASENAME}#" tox.ini;
+tox -r -e ${pyv}-${TARGETS} -- --junitxml=junit-${pyv}-sqlamain.xml
 
