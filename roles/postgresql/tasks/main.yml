@@ -54,6 +54,7 @@
     recreate: "{{ force_container_rebuild|bool }}"
     env: TZ="America/New_York"
     published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"
+    network_mode: "default"
     networks:
       - name: dbcontainers
         ipv4_address: "{{ item['internal_ip'] }}"
