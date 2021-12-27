@@ -41,6 +41,8 @@
     restart_policy: always
     recreate: "{{ force_container_rebuild|bool }}"
     env: TZ="America/New_York"
+    container_default_behavior: "compatibility"
+    network_mode: "default"
     capabilities:
       - SYS_PTRACE
     published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"

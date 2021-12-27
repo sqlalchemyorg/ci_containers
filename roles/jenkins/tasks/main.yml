@@ -64,7 +64,9 @@
   docker_container:
     image: "jenkins"
     name: "jenkins"
+    container_default_behavior: "compatibility"
     restart_policy: always
+    network_mode: "default"
     networks:
       - name: dbcontainers
         ipv4_address: "{{ jenkins_runner_ip }}"

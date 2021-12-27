@@ -52,6 +52,7 @@
     name: "postgresql_{{ item['version'] }}"
     restart_policy: always
     recreate: "{{ force_container_rebuild|bool }}"
+    container_default_behavior: "compatibility"
     env: TZ="America/New_York"
     published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"
     network_mode: "default"
