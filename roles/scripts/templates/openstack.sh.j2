@@ -103,7 +103,9 @@ upstream_deps() {
     elif [[ "${GERRIT_PROJECT}" == "sqlalchemy/alembic" ]]; then
         prepare_current_release_dependency SQLAlchemy sqlalchemy
     else
-        prepare_github_dependency SQLAlchemy sqlalchemy ${SQLALCHEMY_TAG}
+        prepare_current_release_dependency SQLAlchemy sqlalchemy
+
+#        prepare_github_dependency SQLAlchemy sqlalchemy ${SQLALCHEMY_TAG}
     fi
 
     if [[ "${GERRIT_PROJECT}" == "sqlalchemy/alembic" ]]; then
