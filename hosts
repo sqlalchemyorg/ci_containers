@@ -6,7 +6,8 @@ d3 jenkins_secret="{{ d3_secret }}" jenkins_slave_name="d3"
 
 
 [cloud]
-do1 ansible_host=67.207.95.145  ansible_ssh_user=root
+# droplet: CPU Optimized -> $80/mo 8GB / 50GB disk
+do1 ansible_host=192.81.215.160  ansible_ssh_user=root
 
 [fast]
 dell
