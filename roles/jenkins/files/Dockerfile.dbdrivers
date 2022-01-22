@@ -82,8 +82,12 @@ COPY freetds.conf /etc/freetds.conf
 
 WORKDIR /usr/local/jenkins
 
-RUN curl -L -O https://jenkins.sqlalchemy.org/jnlpJars/slave.jar
+RUN curl -L -O https://jenkins.sqlalchemy.org/jnlpJars/agent.jar
 
 VOLUME /usr/local/jenkins /home/jenkins
 
-ENTRYPOINT ["/bin/java", "-jar", "/usr/local/jenkins/slave.jar"]
+# for the follower jar that we launch from here, this is the only way
+# to get options into it.  then the only way to get the git timeout set
+# for all the gerrit actions other than the actual "git checkout" is through
+# this variable.   the main slow part is the gerrit fetch refs part, not the checkout.
+ENTRYPOINT ["/bin/java", "-Dorg.jenkinsci.plugins.gitclient.Git.timeOut=30", "-jar", "/usr/local/jenkins/agent.jar"]
