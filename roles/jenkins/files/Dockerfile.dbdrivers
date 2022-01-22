@@ -86,8 +86,36 @@ RUN curl -L -O https://jenkins.sqlalchemy.org/jnlpJars/agent.jar
 
 VOLUME /usr/local/jenkins /home/jenkins
 
+
+# add
+# "-Dorg.jenkinsci.plugins.gitclient.Git.timeOut=30" for example
+# to set git timeouts, which default to 10 minutes
+# unfortunately, after setting this to 30 minutes, we still see jobs
+# timing out, which means it isn't slow, it's straight up hung.
+# so here we **reduce** the time to 5 minutes so that jobs aren't
+# held up as long.
+#
 # for the follower jar that we launch from here, this is the only way
 # to get options into it.  then the only way to get the git timeout set
 # for all the gerrit actions other than the actual "git checkout" is through
 # this variable.   the main slow part is the gerrit fetch refs part, not the checkout.
-ENTRYPOINT ["/bin/java", "-Dorg.jenkinsci.plugins.gitclient.Git.timeOut=30", "-jar", "/usr/local/jenkins/agent.jar"]
+#
+# notes at https://plugins.jenkins.io/git-client/
+# switch to jgit?  no idea how to make it work. looks like nobody
+# uses it.
+#
+# OK OK OK HERE IS SOMETHING WE CHANGED
+#
+# the issue is fetching refs/changes/* is huge.  Let's do what the docs
+# say: https://plugins.jenkins.io/gerrit-trigger/
+#
+# 1.  set Refspec to $GERRIT_REFSPEC under git -> advanced -> refspec
+# 2.  set branch to build to $GERRIT_BRANCH
+# 3. years ago we tried this and it didnt work.  docs are not that clear:
+#    a. go down to "additional behaviors"
+#    b. click "add"
+#    c. "strategy for choosing what to build"
+#    d. "Choosing strategy" -> "Gerrit Trigger"
+# 4. WORKS!!! fetches just the ref we need!!!!
+#
+ENTRYPOINT ["/bin/java", "-Dorg.jenkinsci.plugins.gitclient.Git.timeOut=5", "-jar", "/usr/local/jenkins/agent.jar"]
