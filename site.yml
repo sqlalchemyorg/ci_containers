@@ -14,7 +14,7 @@
   become: yes
   become_user: "root"
   roles:
-    - { role: postgresql, tags: ['postgresql']}
+    - { role: postgresql, tags: ['postgresql', 'databases']}
 
 - name: deploy fast-only databases
   hosts: fast
@@ -22,8 +22,8 @@
   become: yes
   become_user: "root"
   roles:
-    - { role: mysql, tags: ['mysql']}
-    - { role: mssql, tags: ['mssql']}
+    - { role: mysql, tags: ['mysql', 'databases']}
+    - { role: mssql, tags: ['mssql', 'databases']}
 
 - name: deploy heavy-only databases
   hosts: heavy
@@ -31,7 +31,7 @@
   become: yes
   become_user: "root"
   roles:
-    - { role: oracle, tags: ['oracle']}
+    - { role: oracle, tags: ['oracle', 'databases']}
 
 - name: deploy jenkins, front-facing services
   hosts: local

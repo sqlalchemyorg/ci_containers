@@ -48,6 +48,12 @@
   when: add_public_network|bool
   with_items: "{{ oracle_versions }}"
 
+- name: delete existing oracle containers
+  shell:
+    cmd: docker rm -f "oracle_{{ item['version'] }}"
+  with_items: "{{ oracle_versions }}"
+  when: "delete_containers|bool"
+
 - name: create oracle containers
   docker_container:
     image: "oracle_{{ item['version'] }}"

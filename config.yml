@@ -24,6 +24,8 @@ cpython_short_versions:
   - "2.7"
 
 force_container_rebuild: false
+delete_containers: false
+
 
 # NOTE: hostnames are also used as label strings
 # for ifcfg scripts and the total label length must be

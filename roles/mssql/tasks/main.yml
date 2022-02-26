@@ -34,6 +34,12 @@
   when: add_public_network|bool
   with_items: "{{ mssql_versions }}"
 
+- name: delete existing mssql containers
+  shell:
+    cmd: docker rm -f "mssql_{{ item['version'] }}"
+  with_items: "{{ mssql_versions }}"
+  when: "delete_containers|bool"
+
 - name: create mssql containers
   docker_container:
     image: "mssql_{{ item['version'] }}"

@@ -51,6 +51,12 @@
   when: add_public_network|bool
   with_items: "{{ mysql_versions }}"
 
+- name: delete existing mysql containers
+  shell:
+    cmd: docker rm -f "{{ item['type'] }}_{{ item['version'] }}"
+  with_items: "{{ mysql_versions }}"
+  when: "delete_containers|bool"
+
 - name: create mysql containers
   docker_container:
     image: "{{ item['type'] }}_{{ item['version'] }}"

@@ -46,6 +46,12 @@
   when: add_public_network|bool
   with_items: "{{ postgresql_versions }}"
 
+- name: delete existing postgresql containers
+  shell:
+    cmd: docker rm -f postgresql_{{ item['version'] }}
+  with_items: "{{ postgresql_versions }}"
+  when: "delete_containers|bool"
+
 - name: create postgresql containers
   docker_container:
     image: "postgresql_{{ item['version'] }}"
@@ -71,10 +77,3 @@
     line: "{{ item['internal_ip'] }}    {{ item['hostname'] }}"
   with_items: "{{ postgresql_versions }}"
 
-- name: restart jenkins, if running, to refresh /etc/hosts
-  shell: |
-    jenkins=$( docker ps --format "{{ '{{' }} .Names {{ '}}' }}" | grep "jenkins" )
-    if [[ "${jenkins}" != "" ]]; then
-      docker restart jenkins
-    fi
-  become: yes
