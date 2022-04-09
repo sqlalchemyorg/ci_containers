@@ -347,7 +347,8 @@ run_project ()
     # manually change the file for now
     sed -i.tmp "s/OS_TEST_TIMEOUT=.*/OS_TEST_TIMEOUT=${OS_TEST_TIMEOUT}/" tox.ini
 
-    sed -i.tmp "s#-r{toxinidir}/requirements.txt#-r{toxinidir}/requirements.txt\n      -r${SPECIAL_REQUIREMENTS_FILE}#" tox.ini
+    # sed -i.tmp "s#-r{toxinidir}/requirements.txt#-r{toxinidir}/requirements.txt\n      -r${SPECIAL_REQUIREMENTS_FILE}#" tox.ini
+    sed -i.tmp "s#-r{toxinidir}/test-requirements.txt#-r{toxinidir}/test-requirements.txt\n      -r${SPECIAL_REQUIREMENTS_FILE}#" tox.ini
 
     sed  -i.tmp '/testenv]$/a download = True' tox.ini
 
