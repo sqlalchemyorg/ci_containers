@@ -1,5 +1,13 @@
 FROM centos:8
 
+# we should switch to fedora, or get appstream to work.  until then,
+# do this:
+# https://stackoverflow.com/a/70930049/34549
+
+RUN \
+    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+
 ARG python_versions="2.7.17 3.8.0"
 
 # for glibc-langpack-en see https://github.com/CentOS/sig-cloud-instance-images/issues/71#issuecomment-538302151

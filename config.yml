@@ -7,12 +7,11 @@ ansible_user: classic
 # utilities etc. first
 cpython_versions:
   - "2.7.18"
-  - "3.6.15"
-  - "3.7.12"
-  - "3.8.12"
-  - "3.9.9"
-  - "3.10.2"
-  - "3.11.0a4"
+  - "3.7.13"
+  - "3.8.13"
+  - "3.9.12"
+  - "3.10.4"
+  - "3.11.0b1"
 
 cpython_short_versions:
   - "3.10"
@@ -20,7 +19,6 @@ cpython_short_versions:
   - "3.11"
   - "3.8"
   - "3.7"
-  - "3.6"
   - "2.7"
 
 force_container_rebuild: false
