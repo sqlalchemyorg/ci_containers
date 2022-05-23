@@ -14,5 +14,9 @@ create user test_schema_2 identified by xe;
 grant unlimited tablespace to scott;
 grant unlimited tablespace to test_schema;
 grant unlimited tablespace to test_schema_2;
+grant create table to scott;
+grant create table to test_schema;
+grant create table to test_schema_2;
+
 create public database link test_link connect to scott identified by tiger using 'xe';
 exit;
