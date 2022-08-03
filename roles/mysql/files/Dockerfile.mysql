@@ -19,7 +19,7 @@ RUN \
     yum-config-manager --disable mysql57-community && \
     yum-config-manager --disable mysql56-community && \
     yum-config-manager --enable mysql`echo "${product_version}" | awk -F. '{ print $1$2 }'`-community && \
-    yum install -y mysql-community-server
+    yum install -y mysql-community-server --nogpgcheck
 
 # https://bugs.mysql.com/bug.php?id=91395
 # https://dev.mysql.com/doc/refman/8.0/en/resource-groups.html#resource-group-restrictions
