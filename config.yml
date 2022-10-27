@@ -11,7 +11,7 @@ cpython_versions:
   - "3.8.14"
   - "3.9.14"
   - "3.10.7"
-  - "3.11.0rc1"
+  - "3.11.0"
 
 cpython_short_versions:
   - "3.10"

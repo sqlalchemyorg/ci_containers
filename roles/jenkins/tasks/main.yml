@@ -11,7 +11,7 @@
     state: directory
     owner: jenkins
 
-- name: create docker build location
+- name: create podman build location
   file:
     path: "/usr/local/dockerbuilds/jenkins/"
     state: directory
@@ -34,37 +34,30 @@
     dest: /usr/local/dockerbuilds/jenkins/odbc.ini
 
 - name: build pythons image
-  docker_image:
+  containers.podman.podman_image:
     name: "jenkins_pythons"
-    force_source: "{{ force_container_rebuild|bool }}"
+    force: "{{ force_container_rebuild|bool }}"
+    path: "/usr/local/dockerbuilds/jenkins/"
+    pull: yes
     build:
-      dockerfile: Dockerfile.pythons
-      path: "/usr/local/dockerbuilds/jenkins/"
-      pull: yes
-      args:
-        python_versions: "{{ cpython_versions | join(' ') }}"
-    source: build
+      extra_args: "-f Dockerfile.pythons --build-arg python_versions='{{ cpython_versions | join(' ') }}'"
 
 # NOTE: this is now starting to fail if there's not enough swap space
 # on target (like d3) due to oracle client lib build requiring 2g swap.
 # stop oracle containers, then build this
 - name: build dbdrivers image
-  docker_image:
+  containers.podman.podman_image:
     name: "jenkins"
-    force_source: "{{ force_container_rebuild|bool }}"
+    force: "{{ force_container_rebuild|bool }}"
     build:
-      dockerfile: Dockerfile.dbdrivers
-      path: "/usr/local/dockerbuilds/jenkins/"
-      pull: no
-      args:
-        sqlite_versions: "{{ sqlite_versions | join(' ') }}"
-    source: build
+      extra_args: "-f Dockerfile.dbdrivers --build-arg sqlite_versions='{{ sqlite_versions | join(' ') }}'"
+    path: "/usr/local/dockerbuilds/jenkins/"
+    pull: no
 
 - name: run container
-  docker_container:
+  containers.podman.podman_container:
     image: "jenkins"
     name: "jenkins"
-    container_default_behavior: "compatibility"
     restart_policy: always
     network_mode: "default"
     networks:

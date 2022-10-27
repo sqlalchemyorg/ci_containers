@@ -1,0 +1,47 @@
+- name: install things
+  dnf: name="{{ items }}" state=installed
+  vars:
+    items:
+      - podman
+      - git
+      - python3-virtualenv
+      - bridge-utils
+
+- name: enable and start podman
+  systemd:
+    name: podman
+    enabled: yes
+    daemon_reload: yes
+    state: started
+
+#- name: add dependencies for podman restarter
+#  lineinfile:
+#    path: /usr/lib/systemd/system/podman-restart.service
+#    line: After=network-online.target mnt-synology_music.automount mnt-synology_video.automount mnt-wooly.automount
+#    regexp: '^After='
+
+- name: enable and start podman restarter thing
+  systemd:
+    name: podman-restart
+    enabled: yes
+    daemon_reload: yes
+    state: started
+
+
+- name: create podman network bridge
+  containers.podman.podman_network:
+    driver: bridge
+    state: present
+    internal: true
+    name: dbcontainers
+    subnet: '172.18.0.0/16'
+    gateway: '172.18.0.1'
+
+
+- name: give classic /usr/local/src
+  file:
+    path: /usr/local/src
+    state: directory
+    owner: "{{ ansible_user }}"
+
+

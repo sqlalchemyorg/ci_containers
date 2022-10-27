@@ -3,7 +3,7 @@
 dell jenkins_secret="{{ dell_secret }}" jenkins_slave_name="dell" add_public_network=true
 #d2 jenkins_secret="{{ d2_secret }}" jenkins_slave_name="d2"
 d3 jenkins_secret="{{ d3_secret }}" jenkins_slave_name="d3"
-
+zotac jenkins_secret="{{ zotac_secret }}" jenkins_slave_name="zotac"
 
 [cloud]
 # droplet: CPU Optimized -> $80/mo 8GB / 50GB disk
@@ -12,11 +12,13 @@ d3 jenkins_secret="{{ d3_secret }}" jenkins_slave_name="d3"
 [fast]
 dell
 d3
+zotac
 #do1
 
 [heavy]
 dell
 d3
+zotac
 
 [public_facing]
 ci3.zzzcomputing.com ansible_host=45.79.163.59 ansible_user=classic ansible_ssh_user=classic ansible_ssh_port=2245

@@ -32,16 +32,3 @@
   tags:
     - always
 
-- name: create ansible user if not exists
-  user:
-    name: "{{ ansible_user }}"
-    state: present
-
-# This allows this to work:
-# sudo -H -S  -u gmvault bash
-# using the %wheel group for some reason doesn't allow that.
-- name: add special nopasswd line for our user
-  lineinfile:
-    path: /etc/sudoers
-    state: present
-    line: '{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL'

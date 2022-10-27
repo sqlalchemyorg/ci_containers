@@ -6,7 +6,7 @@
   roles:
     - { role: bootstrap, tags: ['bootstrap']}
     - { role: networking, tags: ['networking']}
-    - { role: docker, tags: ['docker']}
+    - { role: podman, tags: ['podman']}
 
 - name: deploy databases
   hosts: local, cloud
@@ -41,7 +41,6 @@
   roles:
     - { role: jenkins, tags: ['jenkins']}
     - { role: scripts, tags: ['scripts']}  # scripts is dependent on jenkins
-    # - { role: collectd, tags: ['collectd']}
 
 - name: deploy special jenkins linode files
   hosts: public_facing

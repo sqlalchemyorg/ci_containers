@@ -1,10 +1,20 @@
-- set_fact:
-    net_device: "{{ ansible_default_ipv4.interface }}"
 
-- name: add host ifcfg script for ip
-  template:
-    src: "{{ playbook_dir }}/roles/networking/templates/ifcfg_additional.j2"
-    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ net_device }}:{{ net_name }}"
+# old network scripts way.    fedora is deprecating the network-scripts
+# package entirely not surprisingly, so we will try to use NetworkManager
+# - name: add host ifcfg script for ip
+#- set_fact:
+#    net_device: "{{ ansible_default_ipv4.interface }}"
+#  template:
+#    src: "{{ playbook_dir }}/roles/networking/templates/ifcfg_additional.j2"
+#    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ net_device }}:{{ net_name }}"
+#
+#- name: bring interface up
+#  shell: ifup {{ net_device }}:{{ net_name }}
 
-- name: bring interface up
-  shell: ifup {{ net_device }}:{{ net_name }}
+
+
+
+- name: add IP number to ethernet interface
+  shell: |
+    nmcli con modify {{ net_device }} +ipv4.addresses "{{ ip_number }}/24"
+    nmcli con up {{ net_device }}

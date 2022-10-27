@@ -1,6 +1,14 @@
+- name: get net device and host ip address
+  shell: nmcli -g "TYPE,DEVICE" con show --active | grep "ethernet:" | awk -F":" '{print $2}'
+  register: command_output
+  tags:
+    - always
+
 - set_fact:
-    net_device: "{{ ansible_default_ipv4.interface }}"
-    host_ipaddress: "{{ ansible_default_ipv4.address }}"
+    net_device: "{{ command_output.stdout }}"
+  tags:
+    - always
+
 
 - name: enable ipv4 forwarding
   shell: 'echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.d/99-sysctl.conf'
