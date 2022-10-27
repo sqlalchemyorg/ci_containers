@@ -4,21 +4,37 @@ ARG sqlite_versions="2020_3310100"
 
 
 # install mariadb packages, outside of centos packaging
-RUN \
-	yum module disable -y mariadb && \
-    curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s --  && \
-    yum install -y MariaDB-devel MariaDB-client  MariaDB-shared
+#RUN \
+#	yum module disable -y mariadb && \
+#    curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s --  && \
+#    yum install -y MariaDB-devel MariaDB-client  MariaDB-shared
 
+
+# install SQL Server client stuff
+ENV ACCEPT_EULA="Y"
+
+RUN \
+	curl -L -O https://packages.microsoft.com/config/rhel/8/prod.repo && \
+	mv prod.repo /etc/yum.repos.d/mssql-release.repo && \
+	dnf install -y unixODBC unixODBC-devel redhat-rpm-config freetds freetds-devel msodbcsql18 mssql-tools18
+
+# overwrite odbc.ini / freetds.conf
+COPY odbc.ini /etc/odbc.ini
+COPY freetds.conf /etc/freetds.conf
+
+
+# mariadb
+RUN dnf install -y mariadb mariadb-devel
 
 # install postgresql client libs
-RUN yum install -y postgresql postgresql-devel
+RUN dnf install -y postgresql postgresql-devel
 
 # install oracle xe to get client libraries
 # libnsl: DPI-1047: 64-bit Oracle Client library cannot be loaded: "libnsl.so.1:
 # this is part of glibc but may have been moved out to a legacy package as it
 # seems to be up to libnsl.so.2 now
 RUN \
-	yum install -y libaio-devel libnsl bc redhat-rpm-config && \
+	dnf install -y libaio-devel libnsl bc redhat-rpm-config && \
 	mkdir /usr/local/src/oracle && \
 	cd /usr/local/src/oracle && \
 	curl -L -O https://jenkins.sqlalchemy.org/downloads/oracle-xe-11.2.0-1.0.x86_64.rpm.zip && \
@@ -29,21 +45,8 @@ RUN \
 	cd .. && rm -fr oracle
 
 # dogpile.cache tests use redis on demand
-RUN yum install -y redis
+RUN dnf install -y redis memcached memcached-devel
 
-# dogpile.cache tests use memcached on demand
-#
-# installing a newer version than the one provided by yum because we need
-# TLS support enable.  Once the yum package catches up, this can be reverted.
-RUN \
-	curl -L -O https://memcached.org/files/memcached-1.5.22.tar.gz && \
-	tar -xf memcached-1.5.22.tar.gz && \
-	yum install -y libevent-devel && \
-	cd memcached-1.5.22 && \
-	./configure --enable-sasl --enable-sasl-pwdb 	--enable-tls && \
-	make -j "$(nproc)" && \
-	make install && \
-	cd ..
 
 
 COPY install_sqlite.sh /usr/local/src/install_sqlite.sh
@@ -51,32 +54,6 @@ COPY install_sqlite.sh /usr/local/src/install_sqlite.sh
 RUN chmod 0755 /usr/local/src/install_sqlite.sh && \
 	/usr/local/src/install_sqlite.sh "${sqlite_versions}"
 
-# centos 8 has libmemached-libs but
-# unfortunately no libmemcached-devel needed for pylibmc, just build it from
-# source.   dependencies and patches and such ported from the .spec file
-# from https://git.centos.org/git/rpms/libmemcached.git origin/c8 branch
-COPY libmemcached-build.patch /usr/local/src/
-RUN \
-	yum install -y flex bison cyrus-sasl-devel libevent-devel && \
-	curl -L -O https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz && \
-	tar -xf libmemcached-1.0.18.tar.gz && \
-	cd libmemcached-1.0.18 && \
-	patch -p1 < ../libmemcached-build.patch && \
-	./configure --with-memcached=false --enable-libmemcachedprotocol --enable-memaslap --enable-dtrace --disable-static && \
-	make && make install && \
-	cd ..
-
-# install SQL Server client stuff
-ENV ACCEPT_EULA="Y"
-
-RUN \
-	curl -L -O https://packages.microsoft.com/config/rhel/7/prod.repo && \
-	mv prod.repo /etc/yum.repos.d/mssql-release.repo && \
-	yum install -y unixODBC unixODBC-devel redhat-rpm-config freetds freetds-devel msodbcsql mssql-tools
-
-# overwrite odbc.ini / freetds.conf
-COPY odbc.ini /etc/odbc.ini
-COPY freetds.conf /etc/freetds.conf
 
 # the container will mount /etc/hosts from the host
 

@@ -24,6 +24,9 @@
   file:
     path: /usr/local/jenkins/scripts
     state: directory
+    owner: jenkins
+    group: wheel
+    mode: "u=rwx,g=rwx"
 
 - name: copy environment files
   copy:

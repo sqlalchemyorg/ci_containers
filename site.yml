@@ -39,8 +39,8 @@
   become: yes
   become_user: "root"
   roles:
+    - { role: scripts, tags: ['scripts']} # creates paths consumed by jenkins
     - { role: jenkins, tags: ['jenkins']}
-    - { role: scripts, tags: ['scripts']}  # scripts is dependent on jenkins
 
 - name: deploy special jenkins linode files
   hosts: public_facing

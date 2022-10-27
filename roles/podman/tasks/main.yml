@@ -32,7 +32,7 @@
   containers.podman.podman_network:
     driver: bridge
     state: present
-    internal: true
+    internal: false
     name: dbcontainers
     subnet: '172.18.0.0/16'
     gateway: '172.18.0.1'

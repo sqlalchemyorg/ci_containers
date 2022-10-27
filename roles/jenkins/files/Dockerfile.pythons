@@ -1,23 +1,20 @@
-FROM centos:8
+FROM fedora
 
 # we should switch to fedora, or get appstream to work.  until then,
 # do this:
 # https://stackoverflow.com/a/70930049/34549
 
-RUN \
-    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
-    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
-
-ARG python_versions="2.7.17 3.8.0"
+ARG python_versions="2.7.17 3.11.0"
 
 # for glibc-langpack-en see https://github.com/CentOS/sig-cloud-instance-images/issues/71#issuecomment-538302151
-ARG packages="java openldap-devel patch xz bzip2 procps git zip unzip net-tools glibc-langpack-en which"
+ARG packages="java openldap-devel patch xz bzip2 procps git zip unzip net-tools glibc-langpack-en which iputils"
 
 # centos
-ARG build_deps="epel-release gcc gcc-c++ make cmake bzip2-devel zlib-devel openssl-devel"
+# ARG build_deps="epel-release gcc gcc-c++ make cmake bzip2-devel zlib-devel openssl-devel"
 
 # fedora
-# ARG build_deps="gcc gcc-c++ make cmake bzip2-devel zlib-devel compat-openssl10-devel"
+ARG build_deps="gcc gcc-c++ make cmake bzip2-devel zlib-devel openssl-devel"
+#ARG build_deps="gcc gcc-c++ make cmake bzip2-devel zlib-devel compat-openssl10-devel"
 
 ARG python_common_build_deps="libffi-devel"
 ARG python_interp_build_deps="sqlite-devel readline-devel ncurses-devel bzip2-devel gdbm-devel zlib-devel tk-devel libdb-devel xz-devel expat-devel"
