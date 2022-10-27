@@ -31,19 +31,17 @@ delete_containers: false
 # chars
 
 mysql_versions:
+  - {"version": "8.0", "hostname": "mysql80",
+     "public_ip": "192.168.1.210", "internal_ip": "172.18.0.11", "type": "mysql"}
   - {"version": "5.7", "hostname": "mysql57",
      "public_ip": "192.168.1.201", "internal_ip": "172.18.0.6", "type": "mysql"}
   - {"version": "5.6", "hostname": "mysql56",
      "public_ip": "192.168.1.202", "internal_ip": "172.18.0.7", "type": "mysql", "lightweight": true}
-  - {"version": "10.6.4", "hostname": "mariadb106",
-     "public_ip": "192.168.1.204", "internal_ip": "172.18.0.9", "type": "mariadb"}
-  - {"version": "10.5.12", "hostname": "mariadb105",
-     "public_ip": "192.168.1.213", "internal_ip": "172.18.0.16", "type": "mariadb"}
-  - {"version": "10.4.21", "hostname": "mariadb104",
-     "public_ip": "192.168.1.214", "internal_ip": "172.18.0.15", "type": "mariadb",
+  - {"version": "10.9.3", "hostname": "mariadb109",
+     "public_ip": "192.168.1.206", "internal_ip": "172.18.0.25", "type": "mariadb",
      "lightweight": true, "openstack": true}
-  - {"version": "8.0", "hostname": "mysql80",
-     "public_ip": "192.168.1.210", "internal_ip": "172.18.0.11", "type": "mysql"}
+  - {"version": "10.8.5", "hostname": "mariadb108",
+     "public_ip": "192.168.1.204", "internal_ip": "172.18.0.9", "type": "mariadb"}
 
 # any version numbers that change in place have to be added to the remove
 # versions because the image name and container name will be different,
@@ -71,31 +69,30 @@ mysql_remove_versions:
 # pgdg-centos96-9.6-3.noarch.rpm
 # the "9.6-3" is the repotag
 postgresql_versions:
+  - {"version": "15", "hostname": "pg15",
+     "public_ip": "192.168.1.217", "internal_ip": "172.18.0.19"}
   - {"version": "14", "hostname": "pg14",
      "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8"}
   - {"version": "13", "hostname": "pg13",
      "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17"}
   - {"version": "12", "hostname": "pg12",
-     "public_ip": "192.168.1.212", "internal_ip": "172.18.0.14"}
-  - {"version": "11", "hostname": "pg11",
-     "public_ip": "192.168.1.207", "internal_ip": "172.18.0.5"}
-  - {"version": "10", "hostname": "pg10",
-     "public_ip": "192.168.1.209", "internal_ip": "172.18.0.3"}
-  - {"version": "9.6", "hostname": "pg96",
-     "public_ip": "192.168.1.206", "internal_ip": "172.18.0.4",
+     "public_ip": "192.168.1.212", "internal_ip": "172.18.0.14",
      "lightweight": true, "openstack": true}
 
 postgresql_remove_versions:
+  - {"version": "11", "hostname": "pg11"}
+  - {"version": "10", "hostname": "pg10"}
   - {"version": "9.4", 'hostname': "pg94"}
+  - {"version": "9.6", 'hostname': "pg96"}
 
 mssql_versions:
   - {"version": "2017", "hostname": "mssql2017",
      "public_ip": "192.168.1.208", "internal_ip": "172.18.0.10", }
 
 oracle_versions:
-  - {"version": "11.2.0", "hostname": "oracle1120",
-     "public_ip": "192.168.1.205", "internal_ip": "172.18.0.2",
-     "version_prefix": "11"}
+  #- {"version": "11.2.0", "hostname": "oracle1120",
+  #   "public_ip": "192.168.1.205", "internal_ip": "172.18.0.2",
+  #   "version_prefix": "11"}
   - {"version": "18c", "hostname": "oracle18c",
      "public_ip": "192.168.1.216", "internal_ip": "172.18.0.18",
      "version_prefix": "18c"}

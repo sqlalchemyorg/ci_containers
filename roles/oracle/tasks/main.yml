@@ -26,17 +26,14 @@
   when: use_selinux
 
 - name: "build images"
-  docker_image:
+  containers.podman.podman_image:
     name: "oracle_{{ item['version'] }}"
-    force_source: "{{ force_container_rebuild|bool }}"
-    source: "build"
+    force: "{{ force_container_rebuild|bool }}"
     state: "present"
+    path: "/usr/local/dockerbuilds/oracle"
+    pull: yes
     build:
-      path: "/usr/local/dockerbuilds/oracle"
-      pull: yes
-      dockerfile: "Dockerfile.{{ item['version_prefix']}}"
-      args:
-        product_version: "{{ item['version'] }}"
+      extra_args: "-f Dockerfile.{{ item['version_prefix']}} --build-arg product_version='{{ item['version'] }}'"
 
   with_items: "{{ oracle_versions }}"
 
@@ -50,23 +47,20 @@
 
 - name: delete existing oracle containers
   shell:
-    cmd: docker rm -f "oracle_{{ item['version'] }}"
+    cmd: podman rm -f "oracle_{{ item['version'] }}"
   with_items: "{{ oracle_versions }}"
   when: "delete_containers|bool"
 
 - name: create oracle containers
-  docker_container:
+  containers.podman.podman_container:
     image: "oracle_{{ item['version'] }}"
     name: "oracle_{{ item['version'] }}"
     restart_policy: always
     recreate: "{{ force_container_rebuild|bool }}"
     env: TZ="America/New_York"
     published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"
-    container_default_behavior: "compatibility"
-    network_mode: "default"
-    networks:
-      - name: dbcontainers
-        ipv4_address: "{{ item['internal_ip'] }}"
+    network: dbcontainers
+    cmd_args: ["--ip", "{{ item['internal_ip'] }}"]
   vars:
     published_ports:
         - "{{ item['public_ip'] }}:1521:1521/tcp"

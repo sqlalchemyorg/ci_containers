@@ -1,0 +1,4 @@
+- name: remove IP number to ethernet interface
+  shell: |
+    nmcli con modify {{ net_device }} -ipv4.addresses "{{ ip_number }}/24"
+    nmcli con up {{ net_device }}

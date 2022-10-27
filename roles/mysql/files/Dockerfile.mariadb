@@ -1,13 +1,18 @@
-FROM centos:8
+# mariadb's rpms only install on centos 7.  as of 2022-10-27 they do not work
+# on 8.  does not work on fedora (mariadb's packages.  fedora's of course work
+# fine)
+FROM centos:7
 
 ARG product_version=10.4.12
 
 WORKDIR /opt
 
-RUN yum install -y yum-utils
+# centos things
+# epel-release provides the "pv" package, newer mariadbs need this
+RUN yum install -y yum-utils   epel-release
 
-# centos8 thing....grrrr
-RUN yum module disable -y mariadb
+# centos8 thing
+# RUN yum module disable -y mariadb
 
 RUN \
     curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=${product_version}

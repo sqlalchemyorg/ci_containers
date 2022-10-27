@@ -13,7 +13,7 @@
     - "Dockerfile"
 
 - name: stop removed containers
-  docker_container:
+  containers.podman.podman_container:
     name: "postgresql_{{ item['version'] }}"
     state: absent
   with_items: "{{ postgresql_remove_versions }}"
@@ -26,16 +26,14 @@
   with_items: "{{ postgresql_remove_versions }}"
 
 - name: "build images"
-  docker_image:
+  containers.podman.podman_image:
     name: "postgresql_{{ item['version'] }}"
-    force_source: "{{ force_container_rebuild|bool }}"
-    source: "build"
+    force: "{{ force_container_rebuild|bool }}"
     state: present
+    path: "/usr/local/dockerbuilds/postgresql"
+    pull: yes
     build:
-      path: "/usr/local/dockerbuilds/postgresql"
-      pull: yes
-      args:
-        product_version: "{{ item['version'] }}"
+      extra_args: "--build-arg product_version='{{ item['version'] }}'"
   with_items: "{{ postgresql_versions }}"
 
 - name: setup external network
@@ -53,18 +51,15 @@
   when: "delete_containers|bool"
 
 - name: create postgresql containers
-  docker_container:
+  containers.podman.podman_container:
     image: "postgresql_{{ item['version'] }}"
     name: "postgresql_{{ item['version'] }}"
     restart_policy: always
     recreate: "{{ force_container_rebuild|bool }}"
-    container_default_behavior: "compatibility"
     env: TZ="America/New_York"
     published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"
-    network_mode: "default"
-    networks:
-      - name: dbcontainers
-        ipv4_address: "{{ item['internal_ip'] }}"
+    network: dbcontainers
+    cmd_args: ["--ip", "{{ item['internal_ip'] }}"]
   vars:
     published_ports:
       - "{{ item['public_ip'] }}:5432:5432/tcp"

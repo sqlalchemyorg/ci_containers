@@ -11,7 +11,7 @@
   with_items: ["mysql", "mariadb"]
 
 - name: stop removed containers
-  docker_container:
+  containers.podman.podman_container:
     name: "{{ item['type'] }}_{{ item['version'] }}"
     state: absent
   with_items: "{{ mysql_remove_versions }}"
@@ -32,15 +32,13 @@
     - ["mysql_entrypoint.sh", "mysql_setup.sh"]
 
 - name: build images
-  docker_image:
+  containers.podman.podman_image:
     name: "{{ item['type'] }}_{{ item['version'] }}"
+    path: "/usr/local/dockerbuilds/{{ item['type'] }}"
+    pull: yes
     build:
-      path: "/usr/local/dockerbuilds/{{ item['type'] }}"
-      pull: yes
-      args:
-        product_version: "{{ item['version'] }}"
-    source: build
-    force_source: "{{ force_container_rebuild|bool }}"
+      extra_args: "--build-arg product_version='{{ item['version'] }}'"
+    force: "{{ force_container_rebuild|bool }}"
   with_items: "{{ mysql_versions }}"
 
 - name: setup external network
@@ -53,23 +51,20 @@
 
 - name: delete existing mysql containers
   shell:
-    cmd: docker rm -f "{{ item['type'] }}_{{ item['version'] }}"
+    cmd: podman rm -f "{{ item['type'] }}_{{ item['version'] }}"
   with_items: "{{ mysql_versions }}"
   when: "delete_containers|bool"
 
 - name: create mysql containers
-  docker_container:
+  containers.podman.podman_container:
     image: "{{ item['type'] }}_{{ item['version'] }}"
     name: "{{ item['type'] }}_{{ item['version'] }}"
     restart_policy: always
     recreate: "{{ force_container_rebuild|bool }}"
     env: TZ="America/New_York"
     published_ports: "{{ (add_public_network|bool) | ternary(published_ports, omit) }}"
-    container_default_behavior: "compatibility"
-    network_mode: "default"
-    networks:
-      - name: dbcontainers
-        ipv4_address: "{{ item['internal_ip'] }}"
+    network: dbcontainers
+    cmd_args: ["--ip", "{{ item['internal_ip'] }}"]
   vars:
     published_ports:
       - "{{ item['public_ip'] }}:3306:3306/tcp"
