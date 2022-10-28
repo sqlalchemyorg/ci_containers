@@ -56,6 +56,4 @@ export TOX_ORACLE=\
 # the ODBC url needs to be fully qualified so that the
 # process runner can create new database URLs
 export TOX_MSSQL=\
-"--dburi mssql+pyodbc://scott:tiger^5HHH@mssql2017:1433/test?driver=ODBC+Driver+13+for+SQL+Server "
-#\
-#"--dburi mssql+pymssql://scott:tiger^5HHH@mssql2017:1433/test "
+"--dburi mssql+pyodbc://scott:tiger^5HHH@mssql2017:1433/test?driver=ODBC+Driver+18+for+SQL+Server&trustservercertificate=yes "

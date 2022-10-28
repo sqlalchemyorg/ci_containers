@@ -20,3 +20,5 @@ fi
 cd ${GERRIT_PROJECT}
 git fetch ${GERRIT_BASE}${GERRIT_PROJECT} ${GERRIT_REFSPEC}
 git checkout FETCH_HEAD
+
+set +x
