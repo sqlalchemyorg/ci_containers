@@ -33,7 +33,10 @@
     path: "/usr/local/dockerbuilds/oracle"
     pull: yes
     build:
-      extra_args: "-f Dockerfile.{{ item['version_prefix']}} --build-arg product_version='{{ item['version'] }}'"
+      # need isolation chroot (not sure about ulimit thing) so oracle
+      # build can use su command
+      extra_args: "-f Dockerfile.{{ item['version_prefix']}} --build-arg product_version='{{ item['version'] }}' --ulimit nofile=1048576:1048576 --isolation chroot"
+      cache: "{{ not force_container_rebuild }}"
 
   with_items: "{{ oracle_versions }}"
 
