@@ -33,9 +33,8 @@
     path: "/usr/local/dockerbuilds/oracle"
     pull: yes
     build:
-      # need isolation chroot (not sure about ulimit thing) so oracle
-      # build can use su command
-      extra_args: "-f Dockerfile.{{ item['version_prefix']}} --build-arg product_version='{{ item['version'] }}' --ulimit nofile=1048576:1048576 --isolation chroot"
+      # needs a lot of things but --cap-add ALL seems to cover them
+      extra_args: "-f Dockerfile.{{ item['version_prefix']}} --build-arg product_version='{{ item['version'] }}' --cap-add ALL"
       cache: "{{ not force_container_rebuild }}"
 
   with_items: "{{ oracle_versions }}"

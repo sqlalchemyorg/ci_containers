@@ -22,9 +22,9 @@ COPY ./oracle_entrypoint.18c.sh /
 COPY ./oracle_setup.18c.sql /
 COPY ./functions /etc/init.d/functions
 
-RUN \
-	chmod 755 /oracle_setup.18c.sh /oracle_entrypoint.18c.sh && \
-	/oracle_setup.18c.sh
+RUN chmod 755 /oracle_setup.18c.sh /oracle_entrypoint.18c.sh
+
+RUN /oracle_setup.18c.sh
 
 EXPOSE 8085/tcp
 EXPOSE 1521/tcp
