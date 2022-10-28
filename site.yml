@@ -39,7 +39,10 @@
   become: yes
   become_user: "root"
   roles:
-    - { role: scripts, tags: ['scripts']} # creates paths consumed by jenkins
+    # BUG: these two roles are mutually dependent on each other, paths
+    # + usernames.  need to fix that.  right now, have to run both individually,
+    # let them error out, rerun
+    - { role: scripts, tags: ['scripts']}
     - { role: jenkins, tags: ['jenkins']}
 
 - name: deploy special jenkins linode files
@@ -57,6 +60,5 @@
   become_user: "root"
   roles:
     - { role: jenkins_cloud, tags: ['jenkins']}
-    - { role: scripts, tags: ['scripts']}  # scripts is dependent on jenkins
-    # - { role: collectd, tags: ['collectd']}
+    - { role: scripts, tags: ['scripts']}
 

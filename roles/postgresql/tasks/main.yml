@@ -22,6 +22,7 @@
   include_tasks: "{{ playbook_dir }}/roles/networking/tasks/remove_ip.yml"
   vars:
     net_name: "{{ item['hostname'] }}"
+    ip_number: "{{ item['public_ip'] }}"
   when: add_public_network|bool
   with_items: "{{ postgresql_remove_versions }}"
 

@@ -11,6 +11,14 @@
     state: directory
     owner: jenkins
 
+- name: ensure scripts directory present (scripts role makes this also)
+  file:
+    path: /usr/local/jenkins/scripts
+    state: directory
+    owner: jenkins
+    group: wheel
+    mode: "u=rwx,g=rwx"
+
 - name: create podman build location
   file:
     path: "/usr/local/dockerbuilds/jenkins/"

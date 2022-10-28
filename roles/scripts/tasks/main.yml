@@ -37,6 +37,7 @@
   with_items:
     - categorize_gerrit_changes.sh
     - alembic_on_sqla.sh
+    - checkout_gerrit_review.sh
 
 - name: copy environment template files
   template:

@@ -80,10 +80,7 @@ postgresql_versions:
      "lightweight": true, "openstack": true}
 
 postgresql_remove_versions:
-  - {"version": "11", "hostname": "pg11"}
-  - {"version": "10", "hostname": "pg10"}
-  - {"version": "9.4", 'hostname': "pg94"}
-  - {"version": "9.6", 'hostname': "pg96"}
+  - {"version": "11", "hostname": "pg11", "public_ip": "192.168.1.207"}
 
 mssql_versions:
   - {"version": "2017", "hostname": "mssql2017",
