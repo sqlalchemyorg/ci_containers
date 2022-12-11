@@ -4,5 +4,13 @@ export PATH="{% for item in cpython_short_versions %}/opt/python{{ item }}/bin/:
 
 export LD_LIBRARY_PATH="/opt/sqlite3/lib:${LD_LIBRARY_PATH}"
 
-
 export TOX_WORKERS="-n2 --max-worker-restart=5"
+
+if [ ! -d .venv ]; then
+   /opt/python{{ cpython_run_version }}/bin/virtualenv .venv
+fi
+
+source .venv/bin/activate
+python -m pip install pip tox --upgrade
+
+
