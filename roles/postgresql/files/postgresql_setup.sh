@@ -45,6 +45,8 @@ sed -ie "s/^timezone.*/timezone='America\/New_York'/" /var/lib/pgsql/data/postgr
 
 sed -ie "/max_prepared_transactions/ i max_prepared_transactions = 10" /var/lib/pgsql/data/postgresql.conf
 
+sed -ie "s/^max_connections.*/max_connections = 200/" /var/lib/pgsql/data/postgresql.conf
+
 # set password auth
 sed -ie 's/\(.*\)127.0.0.1\/32 \+ident/\1 0.0.0.0\/0        md5/' /var/lib/pgsql/data/pg_hba.conf
 
