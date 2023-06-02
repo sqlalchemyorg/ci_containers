@@ -11,6 +11,12 @@ if [ ! -d .venv ]; then
 fi
 
 source .venv/bin/activate
-python -m pip install pip tox --upgrade
 
+if [[ $pyv == *"py2"* ]]; then
+    # NOTE: 20.22 and above, tox no longer can run py27 envs:
+    # https://github.com/pypa/virtualenv/commit/04af5026d8eff9ab34cd6f4a47e2f9de4f10a25c
+    python -m pip install "virtualenv<20.22" pip tox --upgrade
+else
+    python -m pip install virtualenv pip tox --upgrade
+fi
 
