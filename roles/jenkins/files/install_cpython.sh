@@ -22,7 +22,7 @@ function install_python() {
         PYTHON_INTERP_NAME="python3"
         PIP_NAME="pip3"
         GET_PIP="get-pip.py"
-        CONFIGURE_ARGS=""
+        CONFIGURE_ARGS="--enable-optimizations"
     else
         PYTHON_INTERP_NAME="python"
         PIP_NAME="pip"
