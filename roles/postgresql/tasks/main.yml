@@ -34,7 +34,7 @@
     path: "/usr/local/dockerbuilds/postgresql"
     pull: yes
     build:
-      cache: "{{ not force_container_rebuild }}"
+      cache: false
       extra_args: "--build-arg product_version='{{ item['version'] }}'"
   with_items: "{{ postgresql_versions }}"
 

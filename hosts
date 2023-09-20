@@ -14,8 +14,7 @@ ryzen1 jenkins_secret="{{ ryzen1_secret }}" jenkins_slave_name="ryzen1"
 [fast]
 dell
 ryzen1
-
-#d3
+d3
 #zotac
 #do1
 
