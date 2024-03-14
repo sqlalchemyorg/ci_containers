@@ -1,6 +1,7 @@
 FROM jenkins_pythons
 
-ARG sqlite_versions="2020_3310100"
+# NOTE: this is set in the config.yml file, not here
+ARG sqlite_versions="0000_0000000"
 
 
 # install mariadb packages, outside of centos packaging
@@ -16,7 +17,7 @@ ENV ACCEPT_EULA="Y"
 RUN \
 	curl -L -O https://packages.microsoft.com/config/rhel/8/prod.repo && \
 	mv prod.repo /etc/yum.repos.d/mssql-release.repo && \
-	dnf install -y unixODBC unixODBC-devel redhat-rpm-config freetds freetds-devel msodbcsql18 mssql-tools18
+	dnf install -y unixODBC unixODBC-devel redhat-rpm-config freetds freetds-devel msodbcsql18 mssql-tools18 msodbcsql17
 
 # overwrite odbc.ini / freetds.conf
 COPY odbc.ini /etc/odbc.ini
@@ -48,7 +49,9 @@ RUN \
 RUN dnf install -y redis memcached memcached-devel
 
 
-
+# the SQLite we build here gets used in cPython via
+# LD_LIBRARY_PATH set up in python_envs.sh.   the pythons themselves
+# are built against regular sqlite-devel
 COPY install_sqlite.sh /usr/local/src/install_sqlite.sh
 
 RUN chmod 0755 /usr/local/src/install_sqlite.sh && \

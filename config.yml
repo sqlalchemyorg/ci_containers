@@ -71,19 +71,22 @@ postgresql_versions:
   - {"version": "15", "hostname": "pg15",
      "public_ip": "192.168.1.217", "internal_ip": "172.18.0.19"}
   - {"version": "14", "hostname": "pg14",
-     "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8"}
-  - {"version": "13", "hostname": "pg13",
-     "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17", "openstack": true}
+     "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8", "openstack": true}
 
 postgresql_remove_versions:
+  - {"version": "13", "hostname": "pg13",
+     "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17", "openstack": true}
   - {"version": "12", "hostname": "pg12",
      "public_ip": "192.168.1.212", "internal_ip": "172.18.0.14",
      "lightweight": true, "openstack": true}
 
 
 mssql_versions:
-  - {"version": "2017", "hostname": "mssql2017",
-     "public_ip": "192.168.1.208", "internal_ip": "172.18.0.10", }
+  # no longer works as of linux kernel vmlinuz-6.7
+  # - {"version": "2017", "hostname": "mssql2017",
+  #   "public_ip": "192.168.1.208", "internal_ip": "172.18.0.10", }
+  - {"version": "2022", "hostname": "mssql2022",
+     "public_ip": "192.168.1.209", "internal_ip": "172.18.0.28", }
 
 oracle_versions:
   #- {"version": "11.2.0", "hostname": "oracle1120",
@@ -96,7 +99,7 @@ oracle_versions:
 # note: put only one sqlite version here for now; the "list" idea
 # is not tested yet
 sqlite_versions:
-  - "2021_3360000"
+  - "2023_3420000"
 
 
 jenkins_runner_ip: "172.18.0.13"

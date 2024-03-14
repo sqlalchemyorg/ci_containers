@@ -1,6 +1,9 @@
-FROM centos:7
+FROM fedora:39
 
-ARG product_version=2017
+# mssql_2017 version
+# FROM centos:7
+
+ARG product_version=2022
 
 # docker files
 # https://github.com/Microsoft/mssql-docker/tree/master/linux/preview
@@ -18,22 +21,22 @@ ARG product_version=2017
 #    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools && \
 #    yum clean all
 
-# this seems to be the current working one
+# old 2017 version, does not work on kernel 6.7
 # crashes on ryzen1 as of 2/2024
 # set kernel to 6.6:
 # root@ryzen1:/home/classic# grubby --set-default /boot/vmlinuz-6.6.4-100.fc38.x86_64
 # The default is /boot/loader/entries/b32bbedf9c7941f7b8f8d2970941b280-6.6.4-100.fc38.x86_64.conf with index 2 and kernel /boot/vmlinuz-6.6.4-100.fc38.x86_64
 # see https://github.com/microsoft/mssql-docker/issues/868
-RUN curl https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo > /etc/yum.repos.d/mssql-server-2017.repo && \
-    curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo && \
-    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools mssql-server-fts && \
-    yum clean all
+# RUN curl https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo > /etc/yum.repos.d/mssql-server-2017.repo && \
+#    curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo && \
+#    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools mssql-server-fts && \
+#    yum clean all
 
-# when fixed, we will use 2022:
-# RUN curl https://packages.microsoft.com/config/rhel/9/mssql-server-2022.repo > /etc/yum.repos.d/mssql-server-2022.repo && \
-#     curl https://packages.microsoft.com/config/rhel/9/prod.repo > /etc/yum.repos.d/msprod.repo && \
-#     ACCEPT_EULA=Y dnf install -y mssql-server mssql-tools mssql-server-fts && \
-#     dnf clean all
+# we now use 2022
+RUN curl https://packages.microsoft.com/config/rhel/9/mssql-server-2022.repo > /etc/yum.repos.d/mssql-server-2022.repo && \
+     curl https://packages.microsoft.com/config/rhel/9/prod.repo > /etc/yum.repos.d/msprod.repo && \
+     ACCEPT_EULA=Y dnf install -y mssql-server mssql-tools mssql-server-fts && \
+     dnf clean all
 
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
 
