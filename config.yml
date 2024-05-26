@@ -8,11 +8,12 @@ ansible_user: classic
 cpython_versions:
   - "2.7.18"
   - "3.7.16"
-  - "3.8.16"
-  - "3.9.16"
-  - "3.10.10"
-  - "3.11.3"
-  - "3.12.0b3"
+  - "3.8.19"
+  - "3.9.19"
+  - "3.10.14"
+  - "3.11.9"
+  - "3.12.3"
+  - "3.13.0b1"
 
 # used only by python env virtualenv setup at the moment
 cpython_run_version: 3.11
@@ -23,6 +24,7 @@ cpython_short_versions:
   - "3.10"
   - "3.11"
   - "3.12"
+  - "3.13"
   - "3.9"
   - "3.8"
   - "3.7"
