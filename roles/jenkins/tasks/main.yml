@@ -53,7 +53,7 @@
 
 # NOTE: this is now starting to fail if there's not enough swap space
 # on target (like d3) due to oracle client lib build requiring 2g swap.
-# stop oracle containers, then build this
+# stop oracle and mssql containers, then build this
 - name: build dbdrivers image
   containers.podman.podman_image:
     name: "jenkins"

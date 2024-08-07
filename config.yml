@@ -12,8 +12,8 @@ cpython_versions:
   - "3.9.19"
   - "3.10.14"
   - "3.11.9"
-  - "3.12.3"
-  - "3.13.0b1"
+  - "3.12.5"
+  - "3.13.0rc1"
 
 # used only by python env virtualenv setup at the moment
 cpython_run_version: 3.11

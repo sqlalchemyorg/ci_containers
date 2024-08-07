@@ -7,8 +7,11 @@ function install_python() {
 
     VERSION=$1
     SIMPLE_NUMBER=`echo ${VERSION} | awk -F. '{ print $1"."$2 }'`
+    NODOTS_SIMPLE_NUMBER=`echo ${VERSION} | awk -F. '{ print $1$2 }'`
     MAJOR_VERSION=`echo ${VERSION} | awk -F. '{ print $1 }'`
     NON_BETA_VERSION=`echo ${VERSION} | sed -r 's/([0-9\.]+).*?/\1/'`
+
+    cd /usr/local/src
 
     echo "VERSION=${VERSION} SIMPLE_NUMBER=${SIMPLE_NUMBER} MAJOR_VERSION=${MAJOR_VERSION} NON_BETA_VERSION=${NON_BETA_VERSION}"
 
@@ -17,16 +20,19 @@ function install_python() {
         return
     fi
 
+    if [[ -f get-pip-${NODOTS_SIMPLE_NUMBER}.py ]]; then
+        GET_PIP=get-pip-${NODOTS_SIMPLE_NUMBER}.py
+    else
+        GET_PIP="get-pip.py"
+    fi
 
     if [[ "${MAJOR_VERSION}" == 3 ]]; then
         PYTHON_INTERP_NAME="python3"
         PIP_NAME="pip3"
-        GET_PIP="get-pip.py"
         CONFIGURE_ARGS="--enable-optimizations"
     else
         PYTHON_INTERP_NAME="python"
         PIP_NAME="pip"
-        GET_PIP="get-pip-27.py"
         # pylibmc has wheel files
         # the one for 2.7 is manylinux-mu only
         # set ucs4 so that an "mu" wheel can install,
@@ -37,7 +43,6 @@ function install_python() {
         CONFIGURE_ARGS="--enable-unicode=ucs4"
     fi
 
-    cd /usr/local/src
 
     # rm -fr Python-${VERSION}
 

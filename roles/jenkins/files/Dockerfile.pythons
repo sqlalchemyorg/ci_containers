@@ -1,4 +1,4 @@
-FROM fedora
+FROM fedora:40
 
 # we should switch to fedora, or get appstream to work.  until then,
 # do this:
@@ -35,6 +35,7 @@ RUN yum install -y ${python_interp_build_deps}
 
 RUN curl -L -O https://bootstrap.pypa.io/get-pip.py
 
+RUN curl -L https://bootstrap.pypa.io/pip/3.7/get-pip.py > get-pip-37.py
 RUN curl -L https://bootstrap.pypa.io/pip/2.7/get-pip.py > get-pip-27.py
 
 COPY install_cpython.sh /usr/local/src/install_cpython.sh
