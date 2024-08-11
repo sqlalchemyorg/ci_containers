@@ -28,7 +28,7 @@ COPY freetds.conf /etc/freetds.conf
 RUN dnf install -y mariadb mariadb-devel
 
 # install postgresql client libs
-RUN dnf install -y postgresql postgresql-devel
+RUN dnf install -y postgresql libpq libpq-devel
 
 # install oracle xe to get client libraries
 # libnsl: DPI-1047: 64-bit Oracle Client library cannot be loaded: "libnsl.so.1:
