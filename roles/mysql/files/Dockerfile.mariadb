@@ -1,18 +1,23 @@
 # mariadb's rpms only install on centos 7.  as of 2022-10-27 they do not work
 # on 8.  does not work on fedora (mariadb's packages.  fedora's of course work
 # fine)
-FROM centos:7
+# as of 2024-09-23 they announce theyll do rocky 9.  they still explicitly
+# reject fedora
+FROM rockylinux:9
 
-ARG product_version=10.4.12
+ARG product_version=10.9.3
 
 WORKDIR /opt
 
 # centos things
 # epel-release provides the "pv" package, newer mariadbs need this
-RUN yum install -y yum-utils   epel-release
+# RUN yum install -y yum-utils   epel-release
 
 # centos8 thing
 # RUN yum module disable -y mariadb
+
+# rocky linux
+RUN dnf install -y yum-utils curl procps --allowerasing
 
 RUN \
     curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=${product_version}

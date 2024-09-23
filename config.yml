@@ -40,12 +40,12 @@ delete_containers: false
 # chars
 
 mysql_versions:
-  - {"version": "8.0", "hostname": "mysql80",
+  - {"version": "8.0", "hostname": "mysql80", "yumrepo": "mysql84-community-release-fc39-1.noarch.rpm",
      "public_ip": "192.168.1.210", "internal_ip": "172.18.0.11", "type": "mysql"}
-  - {"version": "5.7", "hostname": "mysql57",
+  - {"version": "5.7", "hostname": "mysql57", "yumrepo": "mysql80-community-release-el7-1.noarch.rpm",
      "public_ip": "192.168.1.201", "internal_ip": "172.18.0.6", "type": "mysql"}
-  - {"version": "5.6", "hostname": "mysql56",
-     "public_ip": "192.168.1.202", "internal_ip": "172.18.0.7", "type": "mysql", "lightweight": true}
+#  - {"version": "5.6", "hostname": "mysql56",
+#     "public_ip": "192.168.1.202", "internal_ip": "172.18.0.7", "type": "mysql", "lightweight": true}
   - {"version": "10.9.3", "hostname": "mariadb109",
      "public_ip": "192.168.1.206", "internal_ip": "172.18.0.25", "type": "mariadb",
      "lightweight": true, "openstack": true}

@@ -38,7 +38,7 @@
     path: "/usr/local/dockerbuilds/{{ item['type'] }}"
     pull: yes
     build:
-      extra_args: "--build-arg product_version='{{ item['version'] }}'"
+      extra_args: "--build-arg product_version='{{ item['version'] }}' --build-arg yumrepo='{{ item['yumrepo'] | default('NONE') }}'"
     force: "{{ force_container_rebuild|bool }}"
   with_items: "{{ mysql_versions }}"
 

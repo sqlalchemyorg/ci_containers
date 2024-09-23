@@ -1,4 +1,4 @@
-FROM centos:7
+FROM oraclelinux:7
 
 ARG product_version=18c
 

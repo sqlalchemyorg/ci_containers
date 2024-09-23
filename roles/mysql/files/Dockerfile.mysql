@@ -1,23 +1,25 @@
-# mysql 5.x series dont seem to be on centos8....
-FROM centos:7
+# this OS changes a lot based on what centos there is or what mysqls there are...
+FROM fedora:39
 
 ARG product_version=5.7
 ARG yumrepo=mysql80-community-release-el7-1.noarch.rpm
+
 WORKDIR /opt
 
-RUN yum install -y yum-utils
+RUN yum install -y yum-utils procps
 
 # centos8 only
-# RUN yum module disable -y mysql
+#  RUN yum module disable -y mysql
 
 RUN \
     curl -OL https://dev.mysql.com/get/${yumrepo}
 
 RUN \
     rpm -i ${yumrepo} && \
-    yum-config-manager --disable mysql80-community && \
-    yum-config-manager --disable mysql57-community && \
-    yum-config-manager --disable mysql56-community && \
+    yum-config-manager --disable mysql-8.4-lts-community || true && \
+    yum-config-manager --disable mysql84-community || true && \
+    yum-config-manager --disable mysql80-community || true && \
+    yum-config-manager --disable mysql57-community || true && \
     yum-config-manager --enable mysql`echo "${product_version}" | awk -F. '{ print $1$2 }'`-community && \
     yum install -y mysql-community-server --nogpgcheck
 
