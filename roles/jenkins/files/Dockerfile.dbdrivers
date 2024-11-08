@@ -38,11 +38,9 @@ RUN \
 	dnf install -y libaio-devel libnsl bc redhat-rpm-config && \
 	mkdir /usr/local/src/oracle && \
 	cd /usr/local/src/oracle && \
-	curl -L -O https://jenkins.sqlalchemy.org/downloads/oracle-xe-11.2.0-1.0.x86_64.rpm.zip && \
-	unzip oracle-xe-11.2.0-1.0.x86_64.rpm.zip && \
-	yum install -y /usr/local/src/oracle/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm && \
-	ln -s /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh /etc/profile.d/oracle_env.sh && \
-	echo 'export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ORACLE_HOME}/lib' >> /etc/profile.d/oracle_env.sh && \
+	curl -L -O https://jenkins.sqlalchemy.org/downloads/oracle-instantclient-basic-linuxx64.rpm && \
+	dnf install -y /usr/local/src/oracle/oracle-instantclient-basic-linuxx64.rpm && \
+	echo '' > /etc/profile.d/oracle_env.sh && \
 	cd .. && rm -fr oracle
 
 # dogpile.cache tests use redis, valkey, memcached on demand
