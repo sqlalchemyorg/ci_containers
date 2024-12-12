@@ -69,13 +69,14 @@ mysql_remove_versions:
 # pgdg-centos96-9.6-3.noarch.rpm
 # the "9.6-3" is the repotag
 postgresql_versions:
+  - {"version": "17", "hostname": "pg17", "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17"}
   - {"version": "16", "hostname": "pg16", "public_ip": "192.168.1.207", "internal_ip": "172.18.0.14"}
   - {"version": "15", "hostname": "pg15",
-     "public_ip": "192.168.1.217", "internal_ip": "172.18.0.19"}
-  - {"version": "14", "hostname": "pg14",
-     "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8", "openstack": true}
+     "public_ip": "192.168.1.217", "internal_ip": "172.18.0.19", "openstack": true}
 
 postgresql_remove_versions:
+  - {"version": "14", "hostname": "pg14",
+   "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8", "openstack": true}
   - {"version": "13", "hostname": "pg13",
      "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17", "openstack": true}
   - {"version": "12", "hostname": "pg12",
