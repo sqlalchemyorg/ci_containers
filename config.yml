@@ -9,11 +9,11 @@ cpython_versions:
   - "2.7.18"
   - "3.7.16"
   - "3.8.19"
-  - "3.9.19"
-  - "3.10.14"
-  - "3.11.9"
-  - "3.12.5"
-  - "3.13.0rc1"
+  - "3.9.21"
+  - "3.10.16"
+  - "3.11.11"
+  - "3.12.8"
+  - "3.13.1"
 
 # used only by python env virtualenv setup at the moment
 cpython_run_version: 3.11
