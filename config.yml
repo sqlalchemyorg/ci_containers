@@ -41,16 +41,16 @@ delete_containers: false
 
 mysql_versions:
   - {"version": "8.0", "hostname": "mysql80", "yumrepo": "mysql84-community-release-fc39-1.noarch.rpm",
-     "public_ip": "192.168.1.210", "internal_ip": "172.18.0.11", "type": "mysql"}
+     "public_ip": "192.168.2.210", "internal_ip": "172.18.0.11", "type": "mysql"}
   - {"version": "5.7", "hostname": "mysql57", "yumrepo": "mysql80-community-release-el7-1.noarch.rpm",
-     "public_ip": "192.168.1.201", "internal_ip": "172.18.0.6", "type": "mysql"}
+     "public_ip": "192.168.2.201", "internal_ip": "172.18.0.6", "type": "mysql"}
 #  - {"version": "5.6", "hostname": "mysql56",
-#     "public_ip": "192.168.1.202", "internal_ip": "172.18.0.7", "type": "mysql", "lightweight": true}
+#     "public_ip": "192.168.2.202", "internal_ip": "172.18.0.7", "type": "mysql", "lightweight": true}
   - {"version": "10.9.3", "hostname": "mariadb109",
-     "public_ip": "192.168.1.206", "internal_ip": "172.18.0.25", "type": "mariadb",
+     "public_ip": "192.168.2.206", "internal_ip": "172.18.0.25", "type": "mariadb",
      "lightweight": true, "openstack": true}
   - {"version": "11.1.2", "hostname": "mariadb111",
-     "public_ip": "192.168.1.214", "internal_ip": "172.18.0.15", "type": "mariadb"}
+     "public_ip": "192.168.2.214", "internal_ip": "172.18.0.15", "type": "mariadb"}
 
 # any version numbers that change in place have to be added to the remove
 # versions because the image name and container name will be different,
@@ -59,9 +59,9 @@ mysql_versions:
 # postgresql doesnt have this problem.
 mysql_remove_versions:
   - {"version": "10.8.5", "hostname": "mariadb108",
-     "public_ip": "192.168.1.204", "internal_ip": "172.18.0.9", "type": "mariadb"}
+     "public_ip": "192.168.2.204", "internal_ip": "172.18.0.9", "type": "mariadb"}
   - {"version": "10.5.1", "hostname": "mariadb105",
-     "public_ip": "192.168.1.213", "internal_ip": "172.18.0.16", "type": "mariadb"}
+     "public_ip": "192.168.2.213", "internal_ip": "172.18.0.16", "type": "mariadb"}
 
 # repotag:
 # go to https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/
@@ -69,34 +69,34 @@ mysql_remove_versions:
 # pgdg-centos96-9.6-3.noarch.rpm
 # the "9.6-3" is the repotag
 postgresql_versions:
-  - {"version": "17", "hostname": "pg17", "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17"}
-  - {"version": "16", "hostname": "pg16", "public_ip": "192.168.1.207", "internal_ip": "172.18.0.14"}
+  - {"version": "17", "hostname": "pg17", "public_ip": "192.168.2.215", "internal_ip": "172.18.0.17"}
+  - {"version": "16", "hostname": "pg16", "public_ip": "192.168.2.207", "internal_ip": "172.18.0.14"}
   - {"version": "15", "hostname": "pg15",
-     "public_ip": "192.168.1.217", "internal_ip": "172.18.0.19", "openstack": true}
+     "public_ip": "192.168.2.217", "internal_ip": "172.18.0.19", "openstack": true}
 
 postgresql_remove_versions:
   - {"version": "14", "hostname": "pg14",
-   "public_ip": "192.168.1.203", "internal_ip": "172.18.0.8", "openstack": true}
+   "public_ip": "192.168.2.203", "internal_ip": "172.18.0.8", "openstack": true}
   - {"version": "13", "hostname": "pg13",
-     "public_ip": "192.168.1.215", "internal_ip": "172.18.0.17", "openstack": true}
+     "public_ip": "192.168.2.215", "internal_ip": "172.18.0.17", "openstack": true}
   - {"version": "12", "hostname": "pg12",
-     "public_ip": "192.168.1.212", "internal_ip": "172.18.0.14",
+     "public_ip": "192.168.2.212", "internal_ip": "172.18.0.14",
      "lightweight": true, "openstack": true}
 
 
 mssql_versions:
   # no longer works as of linux kernel vmlinuz-6.7
   # - {"version": "2017", "hostname": "mssql2017",
-  #   "public_ip": "192.168.1.208", "internal_ip": "172.18.0.10", }
+  #   "public_ip": "192.168.2.208", "internal_ip": "172.18.0.10", }
   - {"version": "2022", "hostname": "mssql2022",
-     "public_ip": "192.168.1.209", "internal_ip": "172.18.0.28", }
+     "public_ip": "192.168.2.209", "internal_ip": "172.18.0.28", }
 
 oracle_versions:
   #- {"version": "11.2.0", "hostname": "oracle1120",
-  #   "public_ip": "192.168.1.205", "internal_ip": "172.18.0.2",
+  #   "public_ip": "192.168.2.205", "internal_ip": "172.18.0.2",
   #   "version_prefix": "11"}
   - {"version": "18c", "hostname": "oracle18c",
-     "public_ip": "192.168.1.216", "internal_ip": "172.18.0.18",
+     "public_ip": "192.168.2.216", "internal_ip": "172.18.0.18",
      "version_prefix": "18c"}
 
 # note: put only one sqlite version here for now; the "list" idea
