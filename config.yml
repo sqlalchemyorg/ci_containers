@@ -44,13 +44,8 @@ mysql_versions:
      "public_ip": "192.168.2.210", "internal_ip": "172.18.0.11", "type": "mysql"}
   - {"version": "5.7", "hostname": "mysql57", "yumrepo": "mysql80-community-release-el7-1.noarch.rpm",
      "public_ip": "192.168.2.201", "internal_ip": "172.18.0.6", "type": "mysql"}
-#  - {"version": "5.6", "hostname": "mysql56",
-#     "public_ip": "192.168.2.202", "internal_ip": "172.18.0.7", "type": "mysql", "lightweight": true}
-  - {"version": "10.9.3", "hostname": "mariadb109",
-     "public_ip": "192.168.2.206", "internal_ip": "172.18.0.25", "type": "mariadb",
-     "lightweight": true, "openstack": true}
   - {"version": "11.1.2", "hostname": "mariadb111",
-     "public_ip": "192.168.2.214", "internal_ip": "172.18.0.15", "type": "mariadb"}
+     "public_ip": "192.168.2.214", "internal_ip": "172.18.0.15", "type": "mariadb", "openstack": true}
 
 # any version numbers that change in place have to be added to the remove
 # versions because the image name and container name will be different,
@@ -58,6 +53,9 @@ mysql_versions:
 # version in container / image name but that's how it is right now.
 # postgresql doesnt have this problem.
 mysql_remove_versions:
+  - {"version": "10.9.3", "hostname": "mariadb109",
+     "public_ip": "192.168.2.206", "internal_ip": "172.18.0.25", "type": "mariadb",
+     "lightweight": true, "openstack": true}
   - {"version": "10.8.5", "hostname": "mariadb108",
      "public_ip": "192.168.2.204", "internal_ip": "172.18.0.9", "type": "mariadb"}
   - {"version": "10.5.1", "hostname": "mariadb105",
@@ -69,12 +67,12 @@ mysql_remove_versions:
 # pgdg-centos96-9.6-3.noarch.rpm
 # the "9.6-3" is the repotag
 postgresql_versions:
-  - {"version": "17", "hostname": "pg17", "public_ip": "192.168.2.215", "internal_ip": "172.18.0.17"}
-  - {"version": "16", "hostname": "pg16", "public_ip": "192.168.2.207", "internal_ip": "172.18.0.14"}
-  - {"version": "15", "hostname": "pg15",
-     "public_ip": "192.168.2.217", "internal_ip": "172.18.0.19", "openstack": true}
+  - {"version": "17", "hostname": "pg17", "public_ip": "192.168.2.215", "internal_ip": "172.18.0.17", "openstack": true}
 
 postgresql_remove_versions:
+  - {"version": "16", "hostname": "pg16", "public_ip": "192.168.2.207", "internal_ip": "172.18.0.14"}
+  - {"version": "15", "hostname": "pg15",
+   "public_ip": "192.168.2.217", "internal_ip": "172.18.0.19", "openstack": true}
   - {"version": "14", "hostname": "pg14",
    "public_ip": "192.168.2.203", "internal_ip": "172.18.0.8", "openstack": true}
   - {"version": "13", "hostname": "pg13",
