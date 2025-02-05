@@ -1,3 +1,11 @@
+sp_configure 'show advanced options', 1;
+GO
+RECONFIGURE;
+go
+sp_configure 'max server memory', 12288;
+go
+RECONFIGURE;
+go
 CREATE DATABASE test;
 go
 CREATE LOGIN scott with password='tiger^5HHH';
