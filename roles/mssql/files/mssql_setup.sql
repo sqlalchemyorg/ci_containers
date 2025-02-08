@@ -2,7 +2,7 @@ sp_configure 'show advanced options', 1;
 GO
 RECONFIGURE;
 go
-sp_configure 'max server memory', 12288;
+sp_configure 'max server memory', 4096;
 go
 RECONFIGURE;
 go
