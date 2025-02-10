@@ -4,6 +4,8 @@ RECONFIGURE;
 go
 sp_configure 'max server memory', 4096;
 go
+sp_configure 'max worker threads', 512;
+go
 RECONFIGURE;
 go
 CREATE DATABASE test;

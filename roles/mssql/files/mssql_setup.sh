@@ -6,6 +6,8 @@ export ACCEPT_EULA='Y'
 export MSSQL_SA_PASSWORD='wh0_CAR;ES!!'
 export MSSQL_PID=Developer
 
+/opt/mssql/bin/mssql-conf set memory.memorylimitmb 4096
+
 /opt/mssql/bin/sqlservr & PID=$!
 
 sleep 30s
