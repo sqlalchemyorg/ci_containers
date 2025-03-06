@@ -1,4 +1,4 @@
-FROM fedora:39
+FROM fedora:40
 
 ARG product_version=15
 
@@ -16,12 +16,11 @@ RUN localedef -v -c -i en_US -f UTF-8 en_US.UTF-8 || true
 
 RUN \
 	VERSION_TOKEN=`echo "${product_version}" | awk -F. '{ print $1$2 }'` && \
-	dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/F-39-x86_64/pgdg-fedora-repo-latest.noarch.rpm
-
+	dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/F-40-x86_64/pgdg-fedora-repo-latest.noarch.rpm
 
 RUN \
 	VERSION_TOKEN=`echo "${product_version}" | awk -F. '{ print $1$2 }'` && \
-	yum install -y \
+	dnf install -y \
 		postgresql${VERSION_TOKEN} \
 		postgresql${VERSION_TOKEN}-contrib \
 		postgresql${VERSION_TOKEN}-server
