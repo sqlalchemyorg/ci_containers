@@ -18,6 +18,10 @@ if [[ ! -d ${GERRIT_PROJECT} ]]; then
 fi
 
 cd ${GERRIT_PROJECT}
+
+echo $(date) : ${GERRIT_REFSPEC} >> GERRIT_BUILD_LOG.txt
+
 git fetch ${GERRIT_BASE}${GERRIT_PROJECT} ${GERRIT_REFSPEC}
+git reset --hard
 git checkout FETCH_HEAD
 
