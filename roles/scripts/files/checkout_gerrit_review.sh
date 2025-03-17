@@ -21,7 +21,16 @@ cd ${GERRIT_PROJECT}
 
 echo $(date) : ${GERRIT_REFSPEC} >> GERRIT_BUILD_LOG.txt
 
-git fetch ${GERRIT_BASE}${GERRIT_PROJECT} ${GERRIT_REFSPEC}
+git fetch --prune ${GERRIT_BASE}${GERRIT_PROJECT} ${GERRIT_REFSPEC}
+
+# wave a chicken at weird "HEAD.lock file exists issue"
+git reset --hard || true
+
+# still waving....
+sleep 2
+
+# success!
 git reset --hard
+
 git checkout FETCH_HEAD
 
