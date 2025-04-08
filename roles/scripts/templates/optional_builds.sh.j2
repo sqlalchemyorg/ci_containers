@@ -1,0 +1,26 @@
+#!/bin/bash
+
+
+# build optional axes on a matrix build
+
+# this is used to test selected gerrits on newer python versions
+# (or could be adapted to other kinds of axes too, like for dogpile.cache
+# etc.)
+
+# this script first checks the matrix node for a certain value,
+# like "py314", meaning we're building Python 3.14.   If so, it looks at git
+# commit message and checks for a string like "py314: yes".  If present,
+# the script proceeds.   If not present, it calls exit, so that the build
+# does not run.
+
+TEST_PYV={{ cpython_alpha_version }}
+
+if [ "$pyv" == "$TEST_PYV" ]; then
+
+   if ! git log -n1  | grep -e "^\s*${TEST_PYV}: yes"; then
+       echo "${TEST_PYV} testing is not enabled; skipping"
+       rm -f junit-*.xml
+       exit 0
+   fi
+
+fi

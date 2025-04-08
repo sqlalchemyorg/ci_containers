@@ -50,6 +50,7 @@
     - openstack.sh
     - sql_env.sh
     - sql_env_lite.sh
+    - optional_builds.sh
 
 # note: synchronize is unusable now with ansible
 - name: synchronize openstack patches
