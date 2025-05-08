@@ -68,7 +68,7 @@ VOLUME /usr/local/jenkins /home/jenkins
 # running all of dockerfile.pythons
 # im sure there are better ways to organize all this but they are escaping
 # me at the moment
-# RUN /usr/local/src/install_cpython.sh "3.14.0a7"
+# RUN /usr/local/src/install_cpython.sh "3.14.0b1"
 
 # try to get rid of huge number of defunct processes
 # https://github.com/adoptium/ci-jenkins-pipelines/issues/1066#issuecomment-2205717795
