@@ -78,7 +78,14 @@
       - "/usr/local/jenkins/scripts/:/usr/local/jenkins/scripts/:ro"
       - "/etc/hosts:/etc/hosts:ro"
     user: "jenkins"
+
     # use webSocket for easiest compatibility with cloudflare.   Requires jenkins config for node "enable websockets"
     # and also requires apache proxyPass directive upgrade=websocket
-    command: "-url https://jenkins.sqlalchemy.org/ -name {{ jenkins_slave_name }} -webSocket -secret {{ jenkins_secret }}"
+    # however, uncertain if cloudflare websockets proxying sends misleading signals to jenkins as we saw dell not able
+    # to reconnect, jenkins still thinking the previous client was still connected
+    # command: "-url https://jenkins.sqlalchemy.org/ -name {{ jenkins_slave_name }} -webSocket -secret {{ jenkins_secret }}"
+
+    # use a straight "tunnel" address to go straight to jenkins via TCP, but still use the URL stuff to
+    # get jenkins instance identity stuff
+    command: "-url https://jenkins.sqlalchemy.org/ -name {{ jenkins_slave_name }} -tunnel workers.jenkins.sqlalchemy.org:9098 -secret {{ jenkins_secret }}"
 
