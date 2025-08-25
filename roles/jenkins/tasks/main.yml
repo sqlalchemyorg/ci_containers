@@ -78,5 +78,7 @@
       - "/usr/local/jenkins/scripts/:/usr/local/jenkins/scripts/:ro"
       - "/etc/hosts:/etc/hosts:ro"
     user: "jenkins"
-    command: "-jnlpUrl https://jenkins.sqlalchemy.org/computer/{{ jenkins_slave_name }}/slave-agent.jnlp -secret {{ jenkins_secret }}"
+    # use webSocket for easiest compatibility with cloudflare.   Requires jenkins config for node "enable websockets"
+    # and also requires apache proxyPass directive upgrade=websocket
+    command: "-url https://jenkins.sqlalchemy.org/ -name {{ jenkins_slave_name }} -webSocket -secret {{ jenkins_secret }}"
 
