@@ -29,7 +29,7 @@ function install_sqlite3() {
 
 	cd sqlite-autoconf-${RELEASE_VERSION}
 
-	./configure --prefix /opt/sqlite3-${RELEASE_VERSION}
+	./configure --prefix=/opt/sqlite3-${RELEASE_VERSION}
 
 	make
 

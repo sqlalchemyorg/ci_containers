@@ -110,7 +110,7 @@ oracle_versions:
 # note: put only one sqlite version here for now; the "list" idea
 # is not tested yet
 sqlite_versions:
-  - "2023_3420000"
+  - "2025_3500400"
 
 
 jenkins_runner_ip: "172.18.0.13"
