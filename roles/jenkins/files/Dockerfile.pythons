@@ -4,7 +4,8 @@ FROM fedora:40
 # do this:
 # https://stackoverflow.com/a/70930049/34549
 
-ARG python_versions="2.7.17 3.11.0"
+ARG python_versions="2.7.17 3.13.1"
+ARG optimize_python_versions="3.13.1"
 
 # for glibc-langpack-en see https://github.com/CentOS/sig-cloud-instance-images/issues/71#issuecomment-538302151
 ARG packages="java openldap-devel patch xz bzip2 procps git zip unzip net-tools glibc-langpack-en which iputils"
@@ -33,13 +34,10 @@ RUN yum install -y ${packages} ${build_deps} ${python_common_build_deps}
 
 RUN yum install -y ${python_interp_build_deps}
 
-RUN curl -L -O https://bootstrap.pypa.io/get-pip.py
-
-RUN curl -L https://bootstrap.pypa.io/pip/3.7/get-pip.py > get-pip-37.py
-RUN curl -L https://bootstrap.pypa.io/pip/2.7/get-pip.py > get-pip-27.py
-
 COPY install_cpython.sh /usr/local/src/install_cpython.sh
 
+
 RUN chmod 0755 /usr/local/src/install_cpython.sh && \
+	ENABLE_OPTIMIZATIONS=1 /usr/local/src/install_cpython.sh "${optimize_python_versions}" && \
 	/usr/local/src/install_cpython.sh "${python_versions}"
 

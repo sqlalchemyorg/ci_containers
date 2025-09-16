@@ -20,16 +20,28 @@ function install_python() {
         return
     fi
 
+    # *try* to actually get the get-pip for this python version, since the
+    # generic get-pip stops working as soon as a version is EOL
+    # however, they dont put the per-version one up until it's EOL.
+    # so --fail means it wont write a file if it's 404
+    curl --fail -L https://bootstrap.pypa.io/pip/${SIMPLE_NUMBER}/get-pip.py  -o get-pip-${NODOTS_SIMPLE_NUMBER}.py || true
+
     if [[ -f get-pip-${NODOTS_SIMPLE_NUMBER}.py ]]; then
         GET_PIP=get-pip-${NODOTS_SIMPLE_NUMBER}.py
     else
+        curl -L -O https://bootstrap.pypa.io/get-pip.py
         GET_PIP="get-pip.py"
     fi
 
     if [[ "${MAJOR_VERSION}" == 3 ]]; then
         PYTHON_INTERP_NAME="python3"
         PIP_NAME="pip3"
-        CONFIGURE_ARGS="--enable-optimizations"
+
+        if [[ -n "${ENABLE_OPTIMIZATIONS}" ]]; then
+            CONFIGURE_ARGS="--enable-optimizations"
+        else
+            CONFIGURE_ARGS="--with-lto"
+        fi
     else
         PYTHON_INTERP_NAME="python"
         PIP_NAME="pip"
