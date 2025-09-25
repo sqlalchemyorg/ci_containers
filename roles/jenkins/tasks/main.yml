@@ -49,7 +49,7 @@
     path: "/usr/local/dockerbuilds/jenkins/"
     pull: yes
     build:
-      extra_args: "-f Dockerfile.pythons --build-arg python_versions='{{ cpython_versions | join(' ') }}' --build-arg optimize_python_versions='{{ optimize_cpython_versions | join(' ') }}'"
+      extra_args: "-f Dockerfile.pythons --build-arg python_versions='{{ cpython_versions | join(' ') }}'"
 
 - name: build dbdrivers image
   containers.podman.podman_image:
