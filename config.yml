@@ -30,7 +30,7 @@ cpython_versions:
 cpython_alpha_version: py315
 
 # used only by python env virtualenv setup at the moment
-cpython_run_version: 3.11
+cpython_run_version: 3.13
 
 # note: the built in tox for 3.11 is not correctly installed,
 # so stick with 3.10 at the top here
@@ -39,7 +39,9 @@ cpython_short_versions:
   - "3.11"
   - "3.12"
   - "3.13"
+  - "3.13t"
   - "3.14"
+  - "3.14t"
   - "3.9"
   - "3.8"
   - "3.7"
