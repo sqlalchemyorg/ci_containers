@@ -13,12 +13,12 @@
 # the script proceeds.   If not present, it calls exit, so that the build
 # does not run.
 
-TEST_PYV={{ cpython_alpha_version }}
+TEST_PYV="{{ cpython_alpha_versions }}"
 
-if [ "$pyv" == "$TEST_PYV" ]; then
+if [[ " $TEST_PYV " =~ " $pyv " ]]; then
 
-   if ! git log -n1  | grep -e "^\s*${TEST_PYV}: yes"; then
-       echo "${TEST_PYV} testing is not enabled; skipping"
+   if ! git log -n1  | grep -e "^\s*${pyv}: yes"; then
+       echo "${pyv} testing is not enabled; skipping"
        rm -f junit-*.xml
        exit 0
    fi

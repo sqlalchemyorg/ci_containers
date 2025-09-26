@@ -25,9 +25,8 @@ cpython_versions:
 # used in the optional_builds.sh.j2 script that will establish this
 # python build axes as "optional" only if the gerrit has
 # "py314: yes" in its commit message
-# this token should keep moving up as new pythons come out, e.g.
-# py315, py316, ...
-cpython_alpha_version: py315
+# this can be a list of tokens where any match initiates the logic
+cpython_alpha_versions: "py315 py313t py314t"
 
 # used only by python env virtualenv setup at the moment
 cpython_run_version: 3.13
