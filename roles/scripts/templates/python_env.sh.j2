@@ -17,6 +17,6 @@ if [[ $pyv == *"py2"* ]]; then
     # https://github.com/pypa/virtualenv/commit/04af5026d8eff9ab34cd6f4a47e2f9de4f10a25c
     python -m pip install "virtualenv<20.22" pip tox --upgrade
 else
-    python -m pip install virtualenv pip tox --upgrade
+    python -m pip install virtualenv pip tox nox --upgrade
 fi
 
