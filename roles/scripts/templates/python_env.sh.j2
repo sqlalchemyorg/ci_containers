@@ -8,6 +8,15 @@ export TOX_WORKERS="-n2 --max-worker-restart=5"
 
 if [ ! -d .venv ]; then
    /opt/python{{ cpython_run_version }}/bin/virtualenv .venv
+elif [ -d .venv ]; then
+   # Check if existing venv Python version matches desired version
+   CURRENT_VERSION=$(.venv/bin/python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')" 2>/dev/null || echo "")
+   DESIRED_VERSION="{{ cpython_run_version }}"
+   if [ "$CURRENT_VERSION" != "$DESIRED_VERSION" ]; then
+      echo "Existing virtualenv Python version ($CURRENT_VERSION) doesn't match desired version ($DESIRED_VERSION). Recreating..."
+      rm -rf .venv
+      /opt/python{{ cpython_run_version }}/bin/virtualenv .venv
+   fi
 fi
 
 source .venv/bin/activate
