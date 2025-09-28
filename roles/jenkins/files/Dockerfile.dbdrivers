@@ -44,7 +44,7 @@ RUN \
 	cd .. && rm -fr oracle
 
 # dogpile.cache tests use redis, valkey, memcached on demand
-RUN dnf install -y redis valkey memcached memcached-devel
+RUN dnf install -y redis valkey memcached memcached-devel libmemcached libmemcached-devel
 
 
 # the SQLite we build here gets used in cPython via
