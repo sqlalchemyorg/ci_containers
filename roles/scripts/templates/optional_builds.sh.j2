@@ -13,7 +13,7 @@
 # the script proceeds.   If not present, it calls exit, so that the build
 # does not run.
 
-TEST_PYV="{{ cpython_alpha_versions }}"
+TEST_PYV="${TEST_PYV:-{{ cpython_alpha_versions }}}"
 
 if [[ " $TEST_PYV " =~ " $pyv " ]]; then
 
